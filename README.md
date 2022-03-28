@@ -1,2 +1,3 @@
-# august295.giithub.io
-blog
+## License
+
+[MIT License](https://github.com/Gaohaoyang/gaohaoyang.github.io/blob/master/LICENSE.md)
