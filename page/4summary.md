@@ -1,3 +1,15 @@
+---
+layout: page
+title: Summary
+permalink: /summary/
+icon: summary
+type: page
+---
+
+* content
+{:toc}
+
+
 # 名言
 
 
