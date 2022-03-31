@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Summary
-permalink: /summary/
-icon: summary
+title: Bookmark
+permalink: /bookmark/
+icon: bookmark
 type: page
 ---
 
@@ -10,7 +10,7 @@ type: page
 {:toc}
 
 
-# 名言
+# 书签
 
 
 

@@ -2,7 +2,7 @@
 layout: page
 title: Collections
 permalink: /collection/
-icon: bookmark
+icon: dropbox
 type: page
 ---
 
