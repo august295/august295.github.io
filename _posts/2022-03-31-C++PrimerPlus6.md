@@ -2,7 +2,7 @@
 layout: post
 title: "C++PrimerPlus6"
 categories: C/C++
-tags: ThirdPart C++PrimerPlus6
+tags: C++PrimerPlus6
 author: August
 mathjax: true
 typora-root-url: ..
@@ -210,9 +210,9 @@ int number = 10;
 C++ 默认显示十进制，需要设置才能显示其他格式
 
 ```
-八进制		oct		043
-十进制		dec		43
-十六进制	hex		0xAA
+八进制      oct		043
+十进制      dec		43
+十六进制    hex		0xAA
     
 int num = 15;
 cout << hex;
@@ -230,7 +230,7 @@ cout << num;
 \
 ```
 
-（5）const 常l量声明
+（5）const 常量声明
 
 
 
@@ -276,9 +276,9 @@ u U ull ULL f F
 ```c++
 char n = 65;
 
-(int) n;			// old C
-int (n);			// new C++
-static_cast<int>(n); // C++
+(int) n;				// old C
+int (n);				// new C++
+static_cast<int>(n);	// C++
 ```
 
 （2）auto
@@ -929,9 +929,9 @@ C++ 赋予 `&` 引用的含义
 
 ```c++
 int a = 10;
-int *x = &a;	// 取地址 
-int &x = a;		// 引用
-int * const x = a; // 引用相当于固定地址的指针（常量指针）
+int *x = &a;		// 取地址 
+int &x = a;			// 引用
+int * const x = a;	// 引用相当于固定地址的指针（常量指针）
 ```
 
 + 引用声明时，必须初始化
