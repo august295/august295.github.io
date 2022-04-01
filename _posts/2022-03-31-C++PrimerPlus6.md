@@ -12,7 +12,7 @@ typora-root-url: ..
 {:toc}
 
 
-该文记录《C++ Primer Plus第六版》读后记录。
+该文记录《C++ Primer Plus（第六版）》读后记录。
 
 
 
