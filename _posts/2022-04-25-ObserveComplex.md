@@ -53,7 +53,7 @@ typora-root-url: ..
 
 
 
-![观察者模式的结构图](../media/image/2022-04-25-ObserveComplex/observe_struct.png)
+![观察者模式的结构图](/media/image/2022-04-25-ObserveComplex/observe_struct.png)
 
 
 
