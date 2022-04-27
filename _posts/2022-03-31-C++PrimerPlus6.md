@@ -2,7 +2,7 @@
 layout: post
 title: "C++PrimerPlus6"
 categories: C/C++
-tags: C++PrimerPlus6
+tags: Books C++PrimerPlus6
 author: August
 mathjax: true
 typora-root-url: ..
