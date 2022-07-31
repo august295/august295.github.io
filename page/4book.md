@@ -10,11 +10,27 @@ type: page
 {:toc}
 
 
-# 书签
+# 书籍
 
 
 
-## 1 黑客与画家
+## 1 分享
+
+### 1.1 C/C++
+
+| 名称                                        | 链接                                                                    |
+| ------------------------------------------- | ----------------------------------------------------------------------- |
+| C++ Primer Plus（第6版）_中文版_带书签_超清 | 链接：https://pan.baidu.com/s/1v4ZiyX5YdB-Oi8J6pnTWQg <br/>提取码：m1n5 |
+| C++ Primer 第5版（中文版）                  | 链接：https://pan.baidu.com/s/1G4eL1ADkE-yHNYoLqKvUEg <br/>提取码：r0aj |
+| Effective C++中文版（第三版）               | 链接：https://pan.baidu.com/s/1DjKX8wX7mbBIL_oxIuQL2w <br/>提取码：1nz8 |
+| 深入理解C++11：C++11新特性解析与应用        | 链接：https://pan.baidu.com/s/1rBlQ0tnbD4rcbp9CfePYKw <br/>提取码：h6dv |
+| STL源码剖析简体中文完整版                   | 链接：https://pan.baidu.com/s/17REoP07GObZ3w2UvWit5Tw <br/>提取码：gc74 |
+
+
+
+## 2 书签
+
+### 2.1 黑客与画家
 
 > P32
 >
@@ -23,9 +39,7 @@ type: page
 > > + 好的程序容易扩展和维护
 > > + 代码和人能跑一个就行了
 
-
-
-## 2 人月神话
+### 2.2 人月神话
 
 > P15
 >
@@ -33,31 +47,23 @@ type: page
 > >
 > > + 项目落后，所以加班是不可避免的吗
 
-
-
-## 3 程序员的自我修养—链接、装载与库
+### 2.3 程序员的自我修养—链接、装载与库
 
 > P8
 >
 > > 计算机科学领域的任何问题都可以通过增加一个简介的中间层来解决问题。（Any problem in computer science can be solved by another layer of indirection）
 
-
-
 > P61
 >
 > > 真正了不起的程序员对自己的程序的每一个字节都了如指掌。
 
-
-
-## 4 STL 源码剖析
+### 2.4 STL 源码剖析
 
 > P285
 >
 > > 算法，问题之解法也。再好的编程技巧，也无法让一个笨拙的算法起死回生。选择了错误的算法，变注定了失败的命运。
 
-
-
-## 5 程序员健康指南
+### 2.5 程序员健康指南
 
 > P2
 >

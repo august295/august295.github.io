@@ -22,9 +22,9 @@ type: page
 | 插件         | Visual Assist X（番茄助手） | VS插件，能够实现高亮显示、智能代码提示、显示编码错误     | <https://www.wholetomato.com/>                   | [1](#1.1.1.1) |
 | 插件         | AtomineerUtils              | VS插件，国外的一款用于生成源代码注释的工具，支持多种风格 | <https://www.atomineerutils.com/>                | [2](#1.1.1.2) |
 
-<p id="1.1.1.1"> [1] 破解版链接：https://pan.baidu.com/s/1hNlw_ZssO42m-QPYE8jYxg</br>提取码：lzjo</br>最后支持VS2019 </p>
+<p id="1.1.1.1"> [1] 链接：https://pan.baidu.com/s/1hNlw_ZssO42m-QPYE8jYxg 提取码：lzjo 最后支持VS2019 </p>
 
-<p id="1.1.1.2"> [2] 破解版链接：https://pan.baidu.com/s/1oAyPsgHo41GduR44-ruRng</br>提取码：77cc</br>最后支持VS2017 </p>
+<p id="1.1.1.2"> [2] 链接：https://pan.baidu.com/s/1oAyPsgHo41GduR44-ruRng 提取码：77cc 最后支持VS2017 </p>
 
 
 
@@ -51,7 +51,7 @@ type: page
 | ------ | ---------------------------- | -------------------- | ------------- |
 | Typora | 一款 Markdown 编辑器和阅读器 | https://typoraio.cn/ | [1](#1.2.2.1) |
 
-<p id="1.2.2.1"> [1] 链接：https://pan.baidu.com/s/147Z1oCWZJZHoSr-DQEwL3A <br/>提取码：xkbb <br/>最后一个免费版0.11.18 </p>
+<p id="1.2.2.1"> [1] 链接：https://pan.baidu.com/s/1rU-V-76VsMfjyjRePPrNvw 提取码：put9 </p>
 
 
 
@@ -79,11 +79,11 @@ type: page
 
 ## 3 有用网址
 
-| 分类        | 介绍                    | 网址                                     |
-| ----------- | ----------------------- | ---------------------------------------- |
-| 汇编        | C++代码转换为汇编代码   | <https://godbolt.org/>                   |
-| C++参考手册 | 中文版，C++官方参考手册 | <https://www.apiref.com/cpp-zh/cpp.html> |
-| C++参考手册 | 英文版，C++官方参考手册 | <https://en.cppreference.com/w/cpp>      |
+| 分类        | 介绍                    | 网址                                |
+| ----------- | ----------------------- | ----------------------------------- |
+| 汇编        | C++代码转换为汇编代码   | <https://godbolt.org/>              |
+| C++参考手册 | 中文版，C++官方参考手册 | <https://zh.cppreference.com/w/cpp> |
+| C++参考手册 | 英文版，C++官方参考手册 | <https://en.cppreference.com/w/cpp> |
 
 
 
