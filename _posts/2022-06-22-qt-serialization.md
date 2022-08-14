@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "qt"
+title: "qt-序列化"
 categories: C/C++
-tags: ThirdPart qt
+tags: ThirdPart qt serialization
 author: August
 mathjax: true
 typora-root-url: ..
@@ -12,11 +12,13 @@ typora-root-url: ..
 {:toc}
 
 
-`Qt` 是一个跨平台C++图形用户界面应用程序开发框架。
+本文讲述使用 `qt` 进行序列化和反序列化。
 
 
 
-# Qt
+# qt-序列化
+
+`Qt` 是一个跨平台 `C++` 图形用户界面应用程序开发框架。
 
 - 官网网址： [https://www.qt.io/](https://www.qt.io/)
 - 下载网址： [https://download.qt.io/](https://download.qt.io/)
@@ -28,9 +30,7 @@ typora-root-url: ..
 
 
 
-## 1 序列化（Serialize）
-
-### 1.1 介绍
+## 1 介绍
 
 `QDataStream` 类实现了序列化 `C++` 的基本数据类型的功能，比如 `char`，`short`，`int`，`char*` 等等,不但如此还可以直接序列化 `QMap` ,`QVector`之类的容器(需要保证容器内的元素是基本类型元素)。
 
@@ -50,7 +50,9 @@ QDataStream &operator<<(QDataStream &, const QXxx &);
 QDataStream &operator>>(QDataStream &, QXxx &);
 ```
 
-### 1.2 使用
+
+
+## 2 使用
 
 ```c++
 #include <iostream>
@@ -212,7 +214,9 @@ int main()
 }
 ```
 
-### 1.3 注意事项
+
+
+## 3 注意事项
 
 - 重载 `<<` `>>` 使用友元函数
 - `C++11` 新特性，枚举添加作用域，不能隐式转换为 `int` 类型，需要强制类型转换。

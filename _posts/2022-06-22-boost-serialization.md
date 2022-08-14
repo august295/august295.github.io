@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "boost"
+title: "boost-序列化"
 categories: C/C++
-tags: ThirdPart boost
+tags: ThirdPart boost serialization
 author: August
 mathjax: true
 typora-root-url: ..
@@ -12,28 +12,30 @@ typora-root-url: ..
 {:toc}
 
 
+本文讲述使用 `boost` 进行序列化。
+
+
+
+# boost-序列化
+
 `boost` 是 `C++` 委员会创建的库，优秀的库将加入 `C++` 标准，十分适合 `C++` 工程开发。
-
-
-
-# Boost
 
 - 官方网址  [https://www.boost.org/](https://www.boost.org/)
 - 开源网址  [https://github.com/boostorg/boost](https://github.com/boostorg/boost)
 
 
 
-## 1 序列化（Serialize）
-
-### 1.1 介绍
+## 1 介绍
 
 `Boost C++` 的 序列化 库允许将 `C++` 应用程序中的对象转换为一个字节序列， 此序列可以被保存，并可在将来恢复对象的时候再次加载。 
 
 `Boost.Serialization` 的主要概念是归档。 归档的文件是相当于序列化的 `C++` 对象的一个字节流。 对象可以通过序列化添加到归档文件，相应地也可从归档文件中加载。 为了恢复和之前存储相同的 `C++` 对象，需假定数据类型是相同的。
 
-### 1.2 侵入式序列化
 
-#### 1.2.1 people.h
+
+## 2 侵入式序列化
+
+### 2.1 people.h
 
 ```c++
 #ifndef __PEOPLE_H__
@@ -136,7 +138,7 @@ private:
 
 ```
 
-#### 1.2.2 people.cpp
+### 2.2 people.cpp
 
 ```cpp
 #include "people.h"
@@ -187,7 +189,7 @@ void People::print()
 }
 ```
 
-#### 1.2.3 main.cpp
+### 2.3 main.cpp
 
 ```cpp
 #include <iostream>
@@ -229,7 +231,7 @@ int main()
 
 
 
-### 1.3 注意事项
+## 3 注意事项
 
 - 序列化使用 `boost` 二次封装的 `STL` 库，不然可能序列化和反序列化失败。同时尽量不使用指针，这可能会导致多成嵌套反序列化失败。
 
