@@ -26,6 +26,12 @@ type: page
 | 深入理解C++11：C++11新特性解析与应用        | 链接：https://pan.baidu.com/s/1rBlQ0tnbD4rcbp9CfePYKw <br/>提取码：h6dv |
 | STL源码剖析简体中文完整版                   | 链接：https://pan.baidu.com/s/17REoP07GObZ3w2UvWit5Tw <br/>提取码：gc74 |
 
+### 1.2 算法
+
+| 名称     | 链接                                                                    |
+| -------- | ----------------------------------------------------------------------- |
+| 算法图解 | 链接：https://pan.baidu.com/s/117wjWfXHxqvzPyAF7SM_RQ <br/>提取码：8xyb |
+
 
 
 ## 2 书签
