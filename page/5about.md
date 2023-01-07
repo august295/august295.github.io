@@ -15,7 +15,7 @@ type: page
 
 
 
-## 个人信息
+## 1. 个人信息
 
 | 属性     | 信息                                                         |
 | -------- | ------------------------------------------------------------ |
@@ -25,30 +25,30 @@ type: page
 | 联系电话 | 15182933051                                                  |
 | 邮箱     | [2950833136@qq.com](2950833136@qq.com)                       |
 | Github   | [https://github.com/august295](https://github.com/august295) |
-| Blog     | [https://august295.github.io/](https://august295.github.io/)<br />https://blog.csdn.net/weixin_42109012（已弃用） |
+| Blog     | [https://august295.github.io/](https://august295.github.io/)<br />[https://blog.csdn.net/weixin_42109012](https://blog.csdn.net/weixin_42109012)（已弃用） |
 
 
 
 
-## 自我评价
+## 2. 自我评价
 
-### C/C++
+### 2.1. C/C++
 
 + 熟悉 `C++11`，熟练使用三方库 `json` 、 `xml`、  `sqlite`、`protobuf`，了解 `STL` 源码实现
 + 熟悉 `Boost`
 + 熟悉 `QT`
 + 了解 23 种设计模式，对单例模式、工厂类模式、发布订阅模式经常使用
 
-### 其他
+### 2.2. 其他
 
 + 出色的调试技能及问题分析解决能力，学习能力强
 + 思路清晰，思维敏捷，有较强的责任心及团队合作精神
 
 
 
-## 工作经验
+## 3. 工作经验
 
-### 北京华如科技股份有限公司
+### 3.1. 北京华如科技股份有限公司
 
 + 工作时间：2021年07月 —— 至今
 + 工作地点：成都
@@ -59,10 +59,10 @@ type: page
 
 
 
-## 项目经验
+## 4. 项目经验
 
 
-### 数据转发
+### 4.1. 数据转发
 + 项目时间：2021年07月  —— 2022年07月
 + 项目描述：数据转发服务
 + 项目职责：搭建发布订阅模式框架，完成数据采集、格式转换、数据转发功能
@@ -72,6 +72,6 @@ type: page
 
 
 
-## Comments
+## 5. Comments
 
 {% include comments.html %}
