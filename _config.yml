@@ -43,7 +43,14 @@ markdown: kramdown
 
 kramdown:
   input: GFM
+  extensions:
+    - autolink
+    - footnotes
+    - smart
+  use_coderay: true
   syntax_highlighter: rouge
+  coderay:
+    coderay_line_numbers:  nil
 
 # port
 # port: 1234
