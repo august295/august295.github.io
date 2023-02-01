@@ -11,21 +11,22 @@ type: page
 
 
 
-<h1 align="center">简历</h1>
+# 简历
 
 
 
 ## 1. 个人信息
 
-| 属性     | 信息                                                         |
-| -------- | ------------------------------------------------------------ |
-| 姓名     | 李俊峰                                                       |
-| 性别     | 男                                                           |
-| 所在地   | 成都                                                         |
-| 联系电话 | 15182933051                                                  |
-| 邮箱     | [2950833136@qq.com](2950833136@qq.com)                       |
-| Github   | [https://github.com/august295](https://github.com/august295) |
-| Blog     | [https://august295.github.io/](https://august295.github.io/)<br />[https://blog.csdn.net/weixin_42109012](https://blog.csdn.net/weixin_42109012)（已弃用） |
+| 属性     | 信息                                                                               |
+| -------- | ---------------------------------------------------------------------------------- |
+| 姓名     | 李俊峰                                                                             |
+| 性别     | 男                                                                                 |
+| 所在地   | 成都                                                                               |
+| 联系电话 | 15182933051                                                                        |
+| 邮箱     | [2950833136@qq.com](2950833136@qq.com)                                             |
+| Github   | [https://github.com/august295](https://github.com/august295)                       |
+| Blog     | [https://august295.github.io/](https://august295.github.io/)                       |
+|          | ~~[https://blog.csdn.net/weixin_42109012](https://blog.csdn.net/weixin_42109012)~~ |
 
 
 
@@ -71,7 +72,3 @@ type: page
   2. 版本控制：项目回滚（版本管理软件）
 
 
-
-## 5. Comments
-
-{% include comments.html %}
