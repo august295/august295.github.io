@@ -35,7 +35,7 @@ type: page
 
 | 分类 | 名称       | 介绍                  | 备注                                                |
 | ---- | ---------- | --------------------- | --------------------------------------------------- |
-| 软件 | Qt Creator | Qt 跨平台继承开发环境 | <https://www.qt.io/zh-cn/product/development-tools> |
+| 软件 | Qt Creator | Qt 跨平台集成开发环境 | <https://www.qt.io/zh-cn/product/development-tools> |
 | 插件 | Beautifier | 代码格式化            |                                                     |
 
 ### 1.2. 生产力工具
