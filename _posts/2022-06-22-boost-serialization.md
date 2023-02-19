@@ -2,7 +2,7 @@
 layout: post
 title: "boost-序列化"
 categories: C/C++
-tags: ThirdPart boost serialization
+tags: boost serialization
 author: August
 mathjax: true
 typora-root-url: ..
@@ -25,7 +25,7 @@ typora-root-url: ..
 
 
 
-## 1 介绍
+## 1. 介绍
 
 `Boost C++` 的 序列化 库允许将 `C++` 应用程序中的对象转换为一个字节序列， 此序列可以被保存，并可在将来恢复对象的时候再次加载。 
 
@@ -33,207 +33,264 @@ typora-root-url: ..
 
 
 
-## 2 侵入式序列化
+## 2. 使用
 
-### 2.1 people.h
+### 2.1. serialize.h
 
-```c++
-#ifndef __PEOPLE_H__
-#define __PEOPLE_H__
+类型声明文件
+
+```cpp
+#pragma once
 
 #include <iostream>
 #include <sstream>
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/map.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 
-template <class T>
-std::string toString(const T& theClass)
+enum class PhoneType
 {
-    std::ostringstream            oss;
-    boost::archive::text_oarchive oa(oss);
-    oa << theClass;
-    return oss.str();
-}
-template <class T>
-T fromString(const std::string& theString)
-{
-    T                             theClass;
-    std::istringstream            iss(theString);
-    boost::archive::text_iarchive ia(iss);
-    ia >> theClass;
-    return theClass;
-}
-
-class Software
-{
-public:
-    Software();
-    void print();
-
-private:
-    friend class boost::serialization::access;
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int version)
-    {
-        ar& m_type;
-    }
-
-private:
-    int m_type;
+    MOBILE = 0,
+    HOME   = 1,
+    WORK   = 2,
 };
 
+// 手机
 class Phone
 {
 public:
     Phone();
-    void print();
+    Phone(std::string number, PhoneType type);
 
-private:
-    friend class boost::serialization::access;
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int version)
-    {
-        ar& m_name;
-        for (size_t i = 0; i < m_software.size(); i++)
-        {
-            ar& m_software[i];
-        }
-    }
+    // 重载 (std::cout <<) 进行打印
+    friend std::ostream& operator<<(std::ostream& stream, const Phone& phone);
 
-private:
-    std::string           m_name;
-    std::vector<Software> m_software;
+public:
+    std::string _Number;
+    PhoneType   _Type;
 };
 
-class People
+// 人
+class Person
 {
 public:
-    People();
-    void print();
+    Person();
+    Person(std::string name, int id, std::string email, double salary, int phoneNum, std::vector<Phone> phone);
 
-private:
+    // 重载 (std::cout <<) 进行打印
+    friend std::ostream& operator<<(std::ostream& stream, const Person& person);
+
+public:
+    std::string        _Name;
+    int                _Id;
+    std::string        _Email;
+    double             _Salary;
+    int                _PhoneNum;
+    std::vector<Phone> _Phone;
+};
+
+// 地址簿
+class AddressBook
+{
+public:
+    AddressBook();
+    void Insert(std::string personName, Person person);
+
+    // 重载 (std::cout <<) 进行打印
+    friend std::ostream& operator<<(std::ostream& stream, const AddressBook& addressBook);
+
+    // 侵入式序列化
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, const unsigned int version)
     {
-        ar& m_age;
-        ar& m_name;
-        for (size_t i = 0; i < m_phones.size(); i++)
-        {
-            ar& m_phones[i];
-        }
+        ar& _Persons;
     }
 
-private:
-    int                m_age;
-    std::string        m_name;
-    std::vector<Phone> m_phones;
+public:
+    std::map<std::string, Person> _Persons;
 };
 
-#endif
+// 非侵入式序列化
+namespace boost
+{
+    namespace serialization
+    {
+        template <class Archive>
+        void serialize(Archive& ar, Phone& phone, const unsigned int version)
+        {
+            ar& phone._Number;
+            ar& phone._Type;
+        }
+
+        template <class Archive>
+        void serialize(Archive& ar, Person& person, const unsigned int version)
+        {
+            ar& person._Name;
+            ar& person._Id;
+            ar& person._Email;
+            ar& person._Salary;
+            ar& person._PhoneNum;
+            ar& person._Phone;
+        }
+    } // namespace serialization
+} // namespace boost
+
+template <class T>
+std::string toBinary(const T& theStruct)
+{
+    std::ostringstream              oss;
+    boost::archive::binary_oarchive oa(oss);
+    oa << theStruct;
+    return oss.str();
+}
+template <class T>
+T fromBinary(const std::string& theText)
+{
+    T                               theStruct;
+    std::istringstream              iss(theText);
+    boost::archive::binary_iarchive ia(iss);
+    ia >> theStruct;
+    return theStruct;
+}
+
+template <class T>
+std::string toText(const T& theStruct)
+{
+    std::ostringstream            oss;
+    boost::archive::text_oarchive oa(oss);
+    oa << theStruct;
+    return oss.str();
+}
+template <class T>
+T fromText(const std::string& theText)
+{
+    T                             theStruct;
+    std::istringstream            iss(theText);
+    boost::archive::text_iarchive ia(iss);
+    ia >> theStruct;
+    return theStruct;
+}
 
 ```
 
-### 2.2 people.cpp
+### 2.2. serialize.cpp
+
+类型实现文件
 
 ```cpp
-#include "people.h"
-
-// 软件
-Software::Software() { m_type = -1; }
-
-void Software::print() { std::cout << m_type << " "; }
+#include "serialize.h"
 
 // 手机
 Phone::Phone()
-{
-    m_name = "xiaomi";
-    Software s;
-    m_software.push_back(s);
-    m_software.push_back(s);
-    m_software.push_back(s);
-}
+{}
 
-void Phone::print()
+Phone::Phone(std::string number, PhoneType type) : _Number(number), _Type(type)
+{}
+
+std::ostream& operator<<(std::ostream& stream, const Phone& phone)
 {
-    std::cout << m_name << " ";
-    for (size_t i = 0; i < m_software.size(); i++)
-    {
-        m_software[i].print();
-    }
+    stream << "\t\t" << phone._Number << std::endl;
+    stream << "\t\t" << static_cast<int>(phone._Type) << std::endl;
+    return stream;
 }
 
 // 人
-People::People()
+Person::Person()
+{}
+
+Person::Person(std::string name, int id, std::string email, double salary, int phoneNum, std::vector<Phone> phone) :
+    _Name(name), _Id(id), _Email(email), _Salary(salary), _PhoneNum(phoneNum), _Phone(phone)
+{}
+
+std::ostream& operator<<(std::ostream& stream, const Person& person)
 {
-    m_age  = 18;
-    m_name = "august";
-    Phone p;
-    m_phones.push_back(p);
-    m_phones.push_back(p);
+    stream << "\t" << person._Name << std::endl;
+    stream << "\t" << person._Id << std::endl;
+    stream << "\t" << person._Email << std::endl;
+    stream << "\t" << person._Salary << std::endl;
+    stream << "\t" << person._PhoneNum << std::endl;
+    for (auto p : person._Phone)
+    {
+        stream << p;
+    }
+    return stream;
 }
 
-void People::print()
+// 地址簿
+AddressBook::AddressBook()
+{}
+
+void AddressBook::Insert(std::string personName, Person person)
 {
-    std::cout << m_age << " ";
-    std::cout << m_name << " ";
-    for (size_t i = 0; i < m_phones.size(); i++)
+    _Persons.emplace(personName, person);
+}
+
+std::ostream& operator<<(std::ostream& stream, const AddressBook& addressBook)
+{
+    for (auto p = addressBook._Persons.begin(); p != addressBook._Persons.end(); ++p)
     {
-        m_phones[i].print();
+        stream << (*p).first << (*p).second;
     }
-    std::cout << std::endl;
+    return stream;
 }
 ```
 
-### 2.3 main.cpp
+### 2.3. main.cpp
+
+测试文件
 
 ```cpp
 #include <iostream>
 
-#include "people.h"
+#include "serialize.h"
 
-void demo()
+AddressBook InitAddressBook()
 {
-    People      st;
-    std::string str = toString<People>(st);
-    st.print();
+    std::vector<Phone> phoneVec;
+    Phone              phone("123", PhoneType::MOBILE);
+    phoneVec.push_back(phone);
+    Person person("august", 1, "123@qq.com", 1234.5, 1, phoneVec);
 
-    std::cout << "\n"
-              << str << "\n"
-              << std::endl;
+    std::vector<Phone> phoneVec2;
+    Phone              phone2("456", PhoneType::WORK);
+    phoneVec2.push_back(phone2);
+    Person person2("tom", 2, "456@qq.com", 4567.8, 1, phoneVec2);
 
-    // 低版本序列化后，高版本可以反序列化，反之不行
-    People new_st = fromString<People>(str);
-    new_st.print();
+    AddressBook addressBook;
+    addressBook.Insert(person._Name, person);
+    addressBook.Insert(person2._Name, person2);
+    return addressBook;
 }
 
-// g++ -o main main.cpp people.cpp -lboost_serialization
 int main()
 {
-    demo();
+    AddressBook addressBook = InitAddressBook();
+
+    // 序列化
+    std::string text        = toText<AddressBook>(addressBook);
+    std::cout << text << std::endl;
+
+    // 反序列化
+    AddressBook addressBookNew;
+    addressBookNew = fromText<AddressBook>(text);
+    std::cout << addressBookNew << std::endl;
 
     return 0;
 }
-
-/**
- * boost-1.56 
- *  22 serialization::archive 11 0 0 18 6 august 3 0 0 6 xiaomi 0 0 -1 -1 -1 6 xiaomi -1 -1 -1 6 xiaomi -1 -1 -1
- * boost-1.69
- *  22 serialization::archive 17 0 0 18 6 august 3 0 0 6 xiaomi 0 0 -1 -1 -1 6 xiaomi -1 -1 -1 6 xiaomi -1 -1 -1
- * boost-1.77
- *  22 serialization::archive 19 0 0 18 6 august 3 0 0 6 xiaomi 0 0 -1 -1 -1 6 xiaomi -1 -1 -1 6 xiaomi -1 -1 -1
- */
 ```
 
 
 
-## 3 注意事项
+## 3. 注意事项
 
-- 序列化使用 `boost` 二次封装的 `STL` 库，不然可能序列化和反序列化失败。同时尽量不使用指针，这可能会导致多成嵌套反序列化失败。
+- 序列化使用 `boost` 二次封装的 `STL` 库，不然可能序列化和反序列化失败。
 
 ```cpp
 // array, list, map, queue, set, stack, string, vector
@@ -241,3 +298,11 @@ int main()
 ```
 
 - 高版本可以反序列化低版本序列化的数据，但是低版本不能反序列化高版本。
+
+
+
+# 参考
+
+[1] [boost 之序列化和反序列化](https://zhuanlan.zhihu.com/p/432784584)
+
+[2] [boost_xml](https://www.boost.org/doc/libs/1_52_0/libs/serialization/example/demo_xml.cpp)
