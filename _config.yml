@@ -60,4 +60,5 @@ gems: [jekyll-paginate]
 paginate: 10
 
 plugins:
-  - jekyll-paginate
+  - jekyll-paginate   # 分页
+  - jekyll-sitemap    # jekyll的站点地图插件，用于生成站点地图
