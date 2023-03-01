@@ -15,12 +15,12 @@ permalink: /:year/:month/:day/:title/
 
 # other links
 twitter_username:
-facebook_username: 
-github_username:  august295
+facebook_username:
+github_username: august295
 email: 2950833136@qq.com
-weibo_username: 
-zhihu_username: 
-linkedIn_username: 
+weibo_username:
+zhihu_username:
+linkedIn_username:
 dribbble_username:
 
 description_footer: C/C++知识
@@ -55,10 +55,13 @@ tag_dir: tag/
 # excerpt
 excerpt_separator: "\n\n\n\n"
 
-# paginate
-gems: [jekyll-paginate]
-paginate: 10
+# plugins install
+gems: [jekyll-paginate, jekyll-sitemap]
+paginate: 5
+paginate_path: "/page-:num/"
+sitemap:
+  filename: "/sitemap.xml"
 
 plugins:
-  - jekyll-paginate   # 分页
-  - jekyll-sitemap    # jekyll的站点地图插件，用于生成站点地图
+  - jekyll-paginate # 分页
+  - jekyll-sitemap # jekyll的站点地图插件，用于生成站点地图
