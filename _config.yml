@@ -57,8 +57,7 @@ excerpt_separator: "\n\n\n\n"
 
 # plugins install
 gems: [jekyll-paginate, jekyll-sitemap]
-paginate: 5
-paginate_path: "/page-:num/"
+paginate: 10
 sitemap:
   filename: "/sitemap.xml"
 
