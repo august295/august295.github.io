@@ -53,10 +53,11 @@ category_dir: category/
 tag_dir: tag/
 
 # excerpt
-excerpt_separator: "\n\n\n\n"
+# Windows use "\r\n\r\n\r\n\r\n"
+# Linux use "\n\n\n\n"
+excerpt_separator: "\r\n\r\n\r\n\r\n"
 
-# plugins install
-gems: [jekyll-paginate, jekyll-sitemap]
+# plugins config
 paginate: 10
 sitemap:
   filename: "/sitemap.xml"
