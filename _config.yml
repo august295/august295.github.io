@@ -53,9 +53,7 @@ category_dir: category/
 tag_dir: tag/
 
 # excerpt
-# Windows use "\r\n\r\n\r\n\r\n"
-# Linux use "\n\n\n\n"
-excerpt_separator: "\r\n\r\n\r\n\r\n"
+excerpt_separator: "。"
 
 # plugins config
 paginate: 10
