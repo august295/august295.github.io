@@ -79,7 +79,7 @@ git clone git@github.com:august295/august295.github.io.git
 #### 3.3.2. 本地部署
 
 ```dockerfile
-docker run -it --name my-jekyll -p 4000:4000 -v D:\\Github\\august295.github.io:/srv/jekyll jekyll/jekyll jekyll serve
+docker run -it --name my-jekyll -p 127.0.0.1:4000:4000 -v D:\\Github\\august295.github.io:/srv/jekyll jekyll/jekyll jekyll serve
 ```
 
 - `my-jekyll`: 创建容器名称
