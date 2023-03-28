@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "EffectiveC++"
+title: "MoreEffectiveC++"
 categories: Book
 tags: Book C/C++
 author: August
@@ -182,7 +182,8 @@ const UPInt UPInt::operator++(int)
 }
 ```
 
-- 前缀形式返回一个引用，后缀形式返回一个 `const` 类型。
+- 前缀形式返回一个引用，后缀形式返回一个 `const` 类型
+- 返回类型包含 `const` 表示不可再修改
 - `i++++` 不允许，去掉 `const` 可以实现，但是结果只增加了一，与期望不一致
 
 ### 2.3. Item M7：不要重载“&&”,“||”, 或“,”
@@ -325,11 +326,163 @@ void f3() throw();
 
 ## 4. 效率
 
+### 4.1. Item M16：牢记 80－20 准则（80－20 rule）
+
+`80－20` 准则说的是大约 `20％` 的代码使用了 `80％` 的程序资源；大约 `20%` 的代码耗用了大约 `80％` 的运行时间；大约 `20％` 的代码使用了 `80％` 的内存；大约 `20％` 的代码执行 `80％` 的磁盘访问；`80％` 的维护投入于大约 `20％` 的代码上。
+
+用分析器（profiler）程序识别出令人讨厌的程序的 `20％` 部分，并优化这 `20%` 代码。
+
+### 4.2. Item M17：考虑使用 lazy evaluation（懒惰计算法）
+
+从效率的观点来看，最佳的计算就是根本不计算，当你使用了 `lazy evaluation` 后，采用此种方法的类将推迟计算工作直到系统需要这些计算的结果。如果不需要结果，将不用进行计算。
+
+- 避免不需要的对象拷贝
+- 通过使用 `operator[]` 区分出读操作
+- 避免不需要的数据库读取操作
+- 避免不需要的数字操作。
+
+### 4.3. Item M18：分期摊还期望的计算
+
+这个条款的核心就是 `over-eager evaluation`（过度热情计算法）：在要求你做某些事情以前就完成它们。
+
+```cpp
+template<class NumericalType> 
+class DataCollection { 
+public: 
+    NumericalType min() const; 
+    NumericalType max() const; 
+    NumericalType avg() const; 
+};
+```
+
+我们把跟踪集合最小值、最大值和平均值的开销分摊到所有这些函数的调用上，每次函数调用所分摊的开销比 `eager evaluation` 或 `lazy evaluation` 要小。
+
+采用 `over-eager` 最简单的方法就是 `caching` (缓存)那些已经被计算出来而以后还有可能需要的值。
+
+### 4.4. Item M19：理解临时对象的来源
+
+建立一个没有命名的非堆（non-heap）对象会产生临时对象。
+
+- 为了使函数成功调用而进行隐式类型转换
+- 函数返回对象时
+
+### 4.5. Item M20：协助完成返回值优化
+
+以某种方法返回对象，能让编译器消除临时对象的开销，这样编写函数通常是很普遍的。这种技巧是返回 `constructor argument` 而不是直接返回对象。
+
+```cpp
+class Rational { 
+public: 
+    Rational(int numerator = 0, int denominator = 1); 
+    int numerator() const; 
+    int denominator() const; 
+    
+    // 一种高效和正确的方法，用来实现返回对象的函数 
+    const Rational operator*(const Rational& lhs, const Rational& rhs) 
+    { 
+        return Rational(lhs.numerator() * rhs.numerator(), 
+                        lhs.denominator() * rhs.denominator()); 
+    }
+};
+
+Rational a = 10; 
+Rational b(1, 2); 
+Rational c = a * b; // 在这里调用 operator*
+```
+
+如果你的编译器这样去做，调用 `operator*` 的临时对象的开销就是零：没有建立临时对象。你的代价就是调用一个构造函数――建立 `c` 时调用的构造函数。不过你还可以通过把函数声明为 `inline` 来消除 `operator*` 的调用开销。
+
+### 4.6. Item M21：通过重载避免隐式类型转换
+
+让编译器完成这种类型转换是确实是很方便，但是建立临时对象进行类型转换工作是有开销的，而我们不想承担这种开销。
+
+```cpp
+// integers 类 
+class UPInt { 
+public: 
+    UPInt(); 
+    UPInt(int value); 
+    
+    const UPInt operator+(const UPInt& lhs, const UPInt& rhs); // add UPInt and UPInt 
+    const UPInt operator+(const UPInt& lhs, int rhs); // add UPInt and int 
+    const UPInt operator+(int lhs, const UPInt& rhs); // add int and UPInt
+};
+```
+
+为什么不重载 `const UPInt operator+(int lhs, int rhs);` ，在 `C++` 中有一条规则是每一个重载的 `operator` 必须带有一个用户定义类型（user-defined type）的参数。
+
+利用重载避免临时对象的方法不只是用在 `operator` 函数上。比如在大多数程序中，你想允许在所有能使用 `string` 对象的地方，也一样可以使用 `char*`，反之亦然。
+
+### 4.7. Item M22：考虑用运算符的赋值形式（op=）取代其单独形式（op）
+
+确保 `operator` 的赋值形式（assignment version）（例如 operator+=）与一个 `operator` 的单独形式（stand-alone）（例如 operator+ ）之间存在正常的关系，一种好方法是后者根据前者来实现。
+
+```cpp
+class Rational { 
+public: 
+    Rational& operator+=(const Rational& rhs); 
+    Rational& operator-=(const Rational& rhs); 
+}; 
+ 
+// operator+ 根据 operator+= 实现
+const Rational operator+(const Rational& lhs, const Rational& rhs) 
+{ 
+    return Rational(lhs) += rhs; 
+} 
+// operator- 根据 operator -= 实现 
+const Rational operator-(const Rational& lhs, const Rational& rhs) 
+{ 
+    return Rational(lhs) -= rhs; 
+}
+
+// 方法一：
+Rational a, b, c, d, result; 
+result = a + b + c + d; // 可能用了 3 个临时对象每个 operator+ 调用使用 1 个 
+// 方法二：
+result = a; //不用临时对象 
+result += b; //不用临时对象 
+result += c; //不用临时对象 
+result += d; //不用临时对象
+```
+
+- 第一、总的来说 `operator` 的赋值形式比其单独形式效率更高，因为单独形式要返回一个新对象，从而在临时对象的构造和释放上有一些开销。`operator` 的赋值形式把结果写到左边的参数里，因此不需要生成临时对象来容纳 `operator` 的返回值。
+- 第二、提供 `operator` 的赋值形式的同时也要提供其标准形式，允许类的客户端在便利与效率上做出折衷选择。
+
+### 4.8. Item M23：考虑变更程序库
+
+因为不同的程序库在效率、可扩展性、移植性、类型安全和其他一些领域上蕴含着不同的设计理念，通过变换使用给予性能更多考虑的程序库，你有时可以大幅度地提高软件的效率。
+
+### 4.9. Item M24：理解虚拟函数、多继承、虚基类和 RTTI 所需的代价
+
+虚函数大多数编译器是使用 `virtual table` 和 `virtual table pointers`。`virtual table` 和 `virtual table pointers` 通常被分别地称为 `vtbl` 和 `vptr`。 
+
+- 虚函数所需的第一个代价：你必须为每个包含虚函数的类的 `virtual talbe` 留出空间。
+- 虚函数所需的第二个代价：在每个包含虚函数的类的对象里，你必须为额外的指针付出代价。 
+
+![image-20230328232436131](/media/image/2023-03-26-MoreEffectiveC++/虚表.png)
+
+![image-20230328232520929](/media/image/2023-03-26-MoreEffectiveC++/虚表指针.png)
+
+多继承（“恐怖的多继承菱形”（the dreaded multiple inheritance diamond））经常导致使对象变得更大，而且不能使用内联。
+
+![image-20230328232733598](/media/image/2023-03-26-MoreEffectiveC++/菱形继承.png)
+
+运行时类型识别（RTTI）。`RTTI` 能让我们在运行时找到对象和类的有关信息，所以肯定有某个地方存储了这些信息让我们查询。这些信息被存储在类型为 `type_info` 的对象里，你能通过使用 `typeid` 操作符访问一个类的 `type_info` 对象。 `RTTI` 被设计为在类的 `vtbl` 基础上实现。 
+
+![image-20230328232756137](/media/image/2023-03-26-MoreEffectiveC++/type_info.png)
+
+下面这个表各是对虚函数、多继承、虚基类以及 `RTTI` 所需主要代价的总结： 
+
+| 特征     | 增加对象大小 | 增加每个类数据 | 减少内联 |
+| -------- | ------------ | -------------- | -------- |
+| 虚函数   | 是           | 是             | 是       |
+| 多重继承 | 是           | 是             | 否       |
+| 虚基类   | 是           | 可能           | 否       |
+| RTTI     | 否           | 是             | 否       |
 
 
 
+## 5. 技巧
 
-
-
-
+### 5.1. Item M25：将构造函数和非成员函数虚拟化
 
