@@ -486,3 +486,223 @@ result += d; //不用临时对象
 
 ### 5.1. Item M25：将构造函数和非成员函数虚拟化
 
+被派生类重定义的虚函数不用必须与基类的虚函数具有一样的返回类型。如果函数的返回类型是一个指向基类的指针（或一个引用），那么派生类的函数可以返回一个指向基类的派生类的指针（或引用）。
+
+```cpp
+class NLComponent { 
+public: 
+    // declaration of virtual copy constructor 
+    virtual NLComponent * clone() const = 0; 
+}; 
+
+class TextBlock: public NLComponent { 
+public: 
+    virtual TextBlock * clone() const // virtual copy constructor
+    { return new TextBlock(*this); } 
+}; 
+class Graphic: public NLComponent { 
+public: 
+    virtual Graphic * clone() const // virtual copy constructor 
+    { return new Graphic(*this); } 
+};
+
+class NewsLetter { 
+public: 
+    NewsLetter(const NewsLetter& rhs); 
+private: 
+    list<NLComponent*> components; 
+}; 
+NewsLetter::NewsLetter(const NewsLetter& rhs) 
+{ 
+    // 遍历整个 rhs 链表，使用每个元素的虚拟拷贝构造函数，把元素拷贝进这个对象的 component 链表。 
+    for (list<NLComponent*>::const_iterator it = rhs.components.begin(); 
+         it != rhs.components.end(); 
+         ++it) { 
+        // "it" 指向 rhs.components 的当前元素，调用元素的 clone 函数， 
+        // 得到该元素的一个拷贝，并把该拷贝放到这个对象的 component 链表的尾端。 
+        components.push_back((*it)->clone()); 
+    } 
+}
+```
+
+如果没有虚拟的构造函数，那么进行深拷贝时不能确定类型，导致新的对象数据丢失。
+
+### 5.2. Item M26：限制某个类所能产生的对象数量
+
+```cpp
+template <class BeingCounted>
+class Counted
+{
+public:
+    class TooManyObjects {}; // 用来抛出异常
+    static int objectCount() { return numObjects; }
+
+protected:
+    Counted();
+    Counted(const Counted& rhs);
+    ~Counted() { --numObjects; }
+
+private:
+    static int          numObjects;
+    static const size_t maxObjects;
+    void                init(); // 避免构造函数的代码重复
+};
+
+template <class BeingCounted>
+Counted<BeingCounted>::Counted()
+{
+    init();
+}
+template <class BeingCounted>
+Counted<BeingCounted>::Counted(const Counted<BeingCounted>&)
+{
+    init();
+}
+template <class BeingCounted>
+void Counted<BeingCounted>::init()
+{
+    if (numObjects >= maxObjects)
+        throw TooManyObjects();
+    ++numObjects;
+}
+```
+
+### 5.3. Item M27：要求或禁止在堆中产生对象
+
+非堆对象（non-heap object）在定义它的地方被自动构造，在生存时间结束时自动被释放，所以只要禁止使用隐式的构造函数和析构函数，就可以禁止在堆中建立对象。
+
+通常对象的建立这样三种情况：
+
+- 对象被直接实例化；
+- 对象做为派生类的基类被实例化；
+- 对象被嵌入到其它对象内。
+
+如果你想不想让用户在堆中建立 `UPNumber` 对象，你可以这样编写： 
+
+```cpp
+class UPNumber { 
+private: 
+    static void *operator new(size_t size); 
+    static void operator delete(void *ptr); 
+};
+```
+
+如果你也想禁止 `UPNumber` 堆对象数组，可以把 `operator new[]` 和 `operator delete[]` 也声明为 `private`。
+
+### 5.4. Item M28：灵巧（smart）指针
+
+### 5.5. Item M29：引用计数
+
+```cpp
+// base class for reference counted objects
+class RCObject
+{
+public:
+    void addReference();
+    void removeReference();
+    void markUnshareable();
+    bool isShareable() const;
+    bool isShared() const;
+
+protected:
+    RCObject();
+    RCObject(const RCObject& rhs);
+    RCObject& operator=(const RCObject& rhs);
+    virtual ~RCObject() = 0;
+
+private:
+    int  refCount;
+    bool shareable;
+};
+
+// template class for smart
+// pointers-to-T objects; T inherit from RCObject
+template <class T>
+class RCPtr
+{       
+public:
+    RCPtr(T* realPtr = 0);
+    RCPtr(const RCPtr& rhs);
+    ~RCPtr();
+    RCPtr& operator=(const RCPtr& rhs);
+    T*     operator->() const;
+    T&     operator*() const;
+
+private:
+    T*   pointee;
+    void init();
+};
+```
+
+上述两个条款本人觉得是智能指针实现。
+
+### 5.6. Item M30：代理类
+
+```cpp
+template <class T>
+class Array2D
+{
+public:
+    class Array1D
+    {
+    public:
+        T&       operator[](int index);
+        const T& operator[](int index) const;
+    };
+    Array1D       operator[](int index);
+    const Array1D operator[](int index) const;
+};
+// 现在，它合法了：
+Array2D<float> data(10, 20);
+cout << data[3][6]; // fine
+```
+
+`Proxy` 类可以完成一些其它方法很难甚至不可能实现的行为。
+
+- 多维数组
+- 左/右值的区分
+- 限制隐式类型转换。 
+
+### 5.7. Item M31：让函数根据一个以上的对象来决定怎么虚拟
+
+
+
+## 6. 杂项
+
+### 6.1. Item M32：在未来时态下开发程序
+
+- 提供完备的类，即使某些部分现在还没有被使用。如果有了新的需求，你不用回过头去改它们。 
+- 将你的接口设计得便于常见操作并防止常见错误。使得类容易正确使用而不易用错。例如，阻止拷贝构造和赋值操作，如果它们对这个类没有意义的话。防止部分赋值。
+- 如果没有限制你不能通用化你的代码，那么通用化它。例如，如果在写树的遍历算法，考虑将它通用得可以处理任何有向不循环图。
+
+未来时态的考虑增加了你的代码的可重用性、可维护性、健壮性，已及在环境发生改变时易于修改。它必须与进行时态的约束条件进行取舍。太多的程序员们只关注于现在的需要，然而这么做牺牲了其软件的长期生存能力。是与众不同的，是离经叛道的，在未来时态下开发程序。 
+
+### 6.2. Item M33：将非尾端类设计为抽象类
+
+### 6.3. Item M34：如何在同一程序中混合使用 C++ 和 C
+
+名变换，就是 `C++` 编译器给程序的每个函数换一个独一无二的名字。在 `C` 中，这个过程是不需要的，因为没有函数重载，但几乎所有 `C++` 程序都有函数重名。
+
+```cpp
+// 告诉编译器，这部分代码按C语言的格式进行编译，而不是C++的
+#ifdef __cplusplus
+extern "C" 
+{
+#endif
+
+/*…*/
+
+#ifdef __cplusplus
+}
+#endif
+```
+
+如果想在同一程序下混合 `C++` 与 `C` 编程，记住下面的指导原则： 
+
+- 确保 `C++` 和 `C` 编译器产生兼容的 `obj` 文件。
+- 将在两种语言下都使用的函数申明为 `extern "C"`。
+- 只要可能，用 `C++` 写 `main()`。
+- 总用 `delete` 释放 `new` 分配的内存；总用 `free` 释放 `malloc` 分配的内存。
+- 将在两种语言间传递的东西限制在用 `C` 编译的数据结构的范围内；这些结构的 `C++` 版本可以包含非虚成员函数。 
+
+### 6.4. Item M35：让自己习惯使用标准 C++ 语言
