@@ -18,7 +18,7 @@ typora-root-url: ..
 
 # More Effective C++
 
-改善程序与设计的55个具体做法
+35个改善编程与设计的有效方法
 
 
 
@@ -159,26 +159,27 @@ double d = 0.5 * r; // 转换 r 到 double, 然后做乘法
 
 ```cpp
 // "unlimited precision int"
-class UPInt {
-public: 
-    UPInt& operator++(); 			// ++ 前缀 
-    const UPInt operator++(int); 	// ++ 后缀 
-    UPInt& operator--(); 			// -- 前缀 
-    const UPInt operator--(int); 	// -- 后缀 
+class UPInt
+{
+public:
+    UPInt&      operator++();    // ++ 前缀
+    const UPInt operator++(int); // ++ 后缀
+    UPInt&      operator--();    // -- 前缀
+    const UPInt operator--(int); // -- 后缀
 };
 
-// 前缀形式：增加然后取回值 
-UPInt& UPInt::operator++() 
-{ 
-    *this += 1; 	// 增加 
-    return *this; 	// 取回值 
-} 
-// 后缀形式：取回值然后增加 
-const UPInt UPInt::operator++(int) 
-{ 
-    UPInt oldValue = *this; // 取回值 
-    ++(*this); 				// 增加 
-    return oldValue; 		// 返回被取回的值 
+// 前缀形式：增加然后取回值
+UPInt& UPInt::operator++()
+{
+    *this += 1;   // 增加
+    return *this; // 取回值
+}
+// 后缀形式：取回值然后增加
+const UPInt UPInt::operator++(int)
+{
+    UPInt oldValue = *this; // 取回值
+    ++(*this);              // 增加
+    return oldValue;        // 返回被取回的值
 }
 ```
 
@@ -274,9 +275,9 @@ catch (Widget& w) // 捕获 Widget 异常
 第二个 `catch` 块重新抛出的是新异常，类型总是 `Widget`，因为 `w` 的静态类型（static type）是 `Widget`。
 
 ```cpp
-catch (Widget w) 		// 通过传值捕获异常 
-catch (Widget& w) 		// 通过传递引用捕获异常 
-catch (const Widget& w) // 通过传递指向 const 的引用捕获异常
+catch (Widget w)            // 通过传值捕获异常
+catch (Widget& w)           // 通过传递引用捕获异常
+catch (const Widget& w)     // 通过传递指向 const 的引用捕获异常
 ```
 
 把一个对象传递给函数或一个对象调用虚拟函数与把一个对象做为异常抛出，这之间有三个主要区别。
@@ -289,7 +290,7 @@ catch (const Widget& w) // 通过传递指向 const 的引用捕获异常
 
 如果你通过引用捕获异常（catch by reference），你就能避开上述所有问题，不会为是否删除异常对象而烦恼；能够避开 `slicing` 异常对象；能够捕获标准异常类型；减少异常对象需要被拷贝的数目。
 
-### 3.6. **Item M14：审慎使用异常规格(exception specifications)** 
+### 3.6. Item M14：审慎使用异常规格(exception specifications)
 
 例如函数 `f1` 没有声明异常规格，这样的函数就可以抛出任意种类的异常： 
 
