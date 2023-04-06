@@ -127,29 +127,159 @@ void container::assign(InputIterator begin, InputIterator end);
 - 使用区间成员函数通常会得到意图清晰和更加直接的代码。
 - 更高的效率。
 
+### 1.6. 第6条：当心C++编译器最烦人的分析机制
+
+`C++` 中有一条普遍规律，即尽可能地解释为函数声明。
+
+```cpp
+// 下面这行代码声明了一个带double参数并返回int的函数
+int f(double d);
+// 下面这行也一样。参数d两边的括号是多余的，会被忽略
+int f(double(d));
+// 下面这行声明了同样的函数，只是它省略了参数名称
+int f(double);
+
+// 第一个声明了一个函数g，它的参数是一个指向不带任何参数的函数的指针，该函数返回double值
+int g(double (*pf)());
+// 有另外一种方式可表明同样的意思。唯一的区别是，pf用非指针的形式来声明（这种形式在C和C++ 中都有效）
+int g(double pf());
+// 下面是g的第三种声明，其中参数名pf被省略了
+int g(double());
+
+// 歧义版
+list<int> data(istream_iterator<int>(dataFile), istream_iterator<int>());
+```
+
+上述声明了一个函数 `data`，其返回值是 `list<int>`。这个 `data` 函数有两个参数：
+
+- 第一个参数的名称是 `dataFile`。它的类型是 `istream_iterator<int>`。d`ataFil`e 两边的括号是多余的，会被忽略。
+- 第二个参数没有名称。它的类型是指向不带参数的函数的指针，该函数返回一个 `istream_iterator<int>`。
+
+使用命名的迭代器对象与通常的 `STL` 程序风格相违背，但你或许觉得为了使代码对所有编译器都没有二义性，并且使维护代码的人理解起来更容易，这一代价是值得的。
+
+```cpp
+// 显示声明版
+ifstream dataFile("ints.dat");
+istream_iterator<int> dataBegin(dataFile);
+istream_iterator<int> dataEnd;
+list<int> data(dataBegin, dataEnd);
+```
+
+### 1.7. 第7条：如果容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉
+
+`STL` 容器很智能，但没有智能到知道是否该删除自己所包含的指针的程度。当你使用指针的容器，而其中的指针应该被删除时，为了避免资源泄漏，你必须或者用引用计数形式的智能指针对象（比如Boost的shared_ptr）代替指针，或者当容器被析构时手工删除其中的每个指针。
+
+### 1.8. 第8条：切勿创建包含auto_ptr的容器对象
+
+`auto_ptr` 的容器（简称COAP）是被禁止的。千万别创建包含 `auto_ptr` 的容器，即使你的 `STL` 平台允许你这样做。
+
+当你复制一个 `auto_ptr` 时，它所指向的对象的所有权被移交到拷入的 `auto_ptr` 上，而它自身被置为 `NULL`。
+
+```cpp
+class Widget {};
+auto_ptr<Widget> pw1(new Widget); // pw1 指向一个 Widget
+auto_ptr<Widget> pw2(pw1);        // pw2 指向 pw1 的 Widget: pw1 被置为 NULL
+                                  // Widget 的所有权从 pw1 转移到 pw2 上
+pw1 = pw2;                        // pw1 指向 Widget: pw2 被置为 NULL
+```
+
+### 1.9. 第9条：慎重选择删除元素的方法
+
+- 要删除容器中有特定值的所有对象：如果容器是 `vector`、`string` 或 `deque`，则使用 `erase-remove` 习惯用法。
+- 如果容器是 `list`，则使用 `list::remove`。
+- 如果容器是一个标准关联容器，则使用它的 `erase` 成员函数。
+- 要删除容器中满足特定判别式（条件）的所有对象：
+  - 如果容器是 `vector`、`string` 或 `deque`，则使用` erase-remove_if` 习惯用法。
+  - 如果容器是 `list`，则使用 `list::remove_if`。
+  - 如果容器是一个标准关联容器，则使用 `remove_copy_if` 和 `swap`，或者写一个循环来遍历容器中的元素，记住当把迭代器传给 `erase` 时，要对它进行后缀递增。
+- 要在循环内部做某些（除了删除对象之外的）操作：
+  - 如果容器是一个标准序列容器，则写一个循环来遍历容器中的元素，记住每次调用 `erase` 时，要用它的返回值更新迭代器。
+  - 如果容器是一个标准关联容器，则写一个循环来遍历容器中的元素，记住当把迭代器传给 `erase` 时，要对迭代器做后缀递增
+
+```cpp
+vector<int> vec;
+// erase-remove 模式
+vec.erase(remove(vec.begin(), vec.end(), 1963), vec.end);
+
+// 序列容器遍历删除
+for (auto iter = vec.begin(); iter != vec.end(); /*什么也不做*/)
+{
+    if (*iter % 2 == 0)
+    {
+        vec.erase(iter++); // 后缀++使迭代器已近移动，删除返回副本
+    }
+    else
+    {
+        ++iter;
+    }
+}
+
+map<int, int> m;
+// 关联容器遍历删除
+for (auto iter = m.begin(); iter != m.end(); /*什么也不做*/)
+{
+    if ((*iter).first % 2 == 0)
+    {
+        iter = m.erase(iter); // 关联容器删除会返回随被删除元素的下一个元素的有效迭代器
+    }
+    else
+    {
+        ++iter;
+    }
+}
+```
+
+### 1.10. 了解分配子（allocator）的约定和限制
+
+在 `C++` 标准中，一个类型为 `T` 的对象，它的默认分配子（称为`allocator<T>`）提供了两个类型定义，分别为 `allocator<T>::pointer` 和 `allocator<T>::reference`，用户定义的分配子也应该提供这些类型定义。
+
+每个分配子模板 `A`（如std::allocator、SpecialAllocator等）都要有一个被称为 `rebind` 的嵌套结构模板。`rebind` 带有唯一的类型参数 `U`，并且只定义了一个类型定义 `other`。`other` 仅仅是 `A<U>` 的名字。结果，通过引用 `Allocator::rebind<ListNode>::other`, `list<T>` 就能从T对象的分配子（称为Allocator）得到相应的 `ListNode` 对象的分配子。
+
+```cpp
+template <typename _Tp1>
+struct rebind
+{
+    typedef allocator<_Tp1> other;
+};
+```
+
+- 你的分配子是一个模板，模板参数 `T` 代表你为它分配内存的对象的类型。
+- 提供类型定义 `pointer` 和 r`eference`，但是始终让 `pointer` 为 `T*` ，`reference` 为 `T&`。
+- 千万别让你的分配子拥有随对象而不同的状态（per-objectstate）。通常，分配子不应该有非静态的数据成员。
+- 记住，传给分配子的 `allocate` 成员函数的是那些要求内存的对象的个数，而不是所需的字节数。同时要记住，这些函数返回 `T*` 指针（通过pointer类型定义），即使尚未有 `T` 对象被构造出来。
+- 一定要提供嵌套的 `rebind` 模板，因为标准容器依赖该模板。
+
+### 1.11. 第11条：理解自定义分配子的合理用法
+
+### 1.12. 第12条：切勿对STL容器的线程安全性有不切实际的依赖
+
+对一个STL实现你最多只能期望：
+
+- **多个线程读是安全的** 。多个线程可以同时读同一个容器的内容，并且保证是正确的。自然地，在读的过程中，不能对容器有任何写入操作。
+- **多个线程对不同的容器做写入操作是安全的** 。多个线程可以同时对不同的容器做写入操作
+
+考虑当一个库试图实现完全的容器线程安全性时可能采取的方式：
+
+- 对容器成员函数的每次调用，都锁住容器直到调用结束。
+- 在容器所返回的每个迭代器的生存期结束前，都锁住容器（比如通过 begin 或 end 调用）。
+- 对于作用于容器的每个算法，都锁住该容器，直到算法结束。（实际上这样做没有意义。因为，如同在第32条中解释的，算法无法知道它们所操作的容器。尽管如此，在这里我们仍要讨论这一选择。因为即便这是可能的，我们也会发现这种做法仍不能实现线程安全性，这对于我们的讨论是有益的。）
+
+```cpp
+vector<int> vec;
+mutex       mut;
+{
+    lock_guard<mutex>     lock(mut); // 获取互斥体
+    vector<int>::iterator first5(find(vec.begin(), vec.end(), 5));
+    if (first5 != vec.end())
+    {
+        *first5 = 0;
+    }
+} // 代码块结束，自动释放
+```
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 2. vector和string
 
 
 
