@@ -281,5 +281,236 @@ mutex       mut;
 
 ## 2. vector和string
 
+### 2.1. 第13条：vector和string优先于动态分配的数组
+
+当你决定用 `new` 来动态分配内存时，这意味着你将承担以下责任：
+
+- 你必须确保以后会有人用 `delete` 来删除所分配的内存。如果没有随后的 `delete`，那么你的new将会导致一个资源泄漏。
+- 你必须确保使用了正确的 `delete` 形式。如果分配了单个对象，则必须使用 `delete`；如果分配了数组，则需要用 `delete[]`。如果使用了不正确的 `delete` 形式，那么结果将是不确定的。在有些平台上，程序会在运行时崩溃。在其他平台上，它会妨碍进一步运行，有时会泄漏资源和破坏内存。
+- 你必须确保只 `delete` 了一次。如果一次分配被多次 `delete`，结果同样是不确定的。
+
+`vector` 和 `string` 它们自己管理内存。当元素被加入到容器中时，它们的内存会增长；而当 `vector` 或 `string` 被析构时，它们的析构函数会自动析构容器中的元素并释放包含这些元素（只是对象不能自动释放指针）的内存。
+
+`vector` 和 `string` 是功能完全的 `STL` 序列容器，所以，凡是适合于序列容器的 `STL` 算法，你都可以使用。
+
+### 2.2. 第14条：使用reserve来避免不必要的重新分配
+
+对于 `vector` 和 `string`，增长过程是这样来实现的：每当需要更多空间时，就调用与 `realloc` 类似的操作。这一类似于 `realloc` 的操作分为以下4部分：
+
+- 分配一块大小为当前容量的某个倍数的新内存。在大多数实现中，`vector` 和 `string` 的容量每次以2的倍数增长，每当容器需要扩张时，它们的容量就加倍。
+- 把容器的所有元素从旧的内存复制到新的内存中。
+- 析构掉旧内存中的对象。
+- 释放旧内存。
+
+在标准容器中，只有 `vector` 和 `string` 提供了所有这4个函数。
+
+- `size()` 告诉你该容器中有多少个元素。
+- `capacity()` 告诉你该容器利用已经分配的内存可以容纳多少个元素。
+- `resize(Container::size_type n)` 强迫容器改变到包含 `n` 个元素的状态。
+- `reserve(Container::size_type n)` 强迫容器把它的容量变为至少是 `n`，前提是 `n` 不小于当前的大小。
+
+若能确切知道或大致预计容器中最终会有多少元素，则此时可使用 `reserve`。
+
+```cpp
+vector<int> vec;
+vec.reserve(1000);	// 提前分配，避免多次扩展
+for (size_t i = 0; i < 1000; i++)
+{
+    vec.push_back(i);
+}
+```
+
+### 2.3. 第15条：注意string实现的多样性
+
+- `string` 的值可能会被引用计数，也可能不会。很多实现在默认情况下会使用引用计数，但它们通常提供了关闭默认选择的方法，往往是通过预处理宏来做到这一点。第13条给出了你想将其关闭的一种特殊情况，但其他的原因也可能会让你这样做。比如，只有当字符串被频繁复制时，引用计数才有用，而有些应用并不经常复制内存，这就不值得使用引用计数了。
+- `string` 对象大小的范围可以是一个 `char*` 指针的大小的1倍到7倍。
+- 创建一个新的字符串值可能需要零次、一次或两次动态分配内存。
+- `string` 对象可能共享，也可能不共享其大小和容量信息。
+- `string` 可能支持，也可能不支持针对单个对象的分配子。
+- 不同的实现对字符内存的最小分配单位有不同的策略。
+
+### 2.4. 第16条：了解如何把vector和string数据传给旧的API
+
+如果你有一个 `vector v`，而你需要得到一个指向 `v` 中数据的指针，从而可把 `v` 中的数据作为数组来对待，那么只需使用 `&v[0]` 就可以了。
+
+```cpp
+void doSomething(const int* pInts, size_t numInts);
+
+vector<int> vec;
+if (!vec.empty())
+{
+    doSomething(&vec[0], vec.size());
+}
+
+// 如果使用 begin() 但是不推荐
+if (!vec.empty())
+{
+    doSomething(&*vec.begin(), vec.size());
+}
+```
+
+对于 `string s`，对应的形式是 `s.c_str()`。
+
+- `string` 中的数据不一定存储在连续的内存中；
+- `string` 的内部表示不一定是以空字符结尾的。
+
+```cpp
+void doSomething(const char* pString);
+
+string str;
+doSomething(str.c_str());
+```
+
+除了 `vector` 和 `string` 以外的其他 `STL` 容器也能把它们的数据传递给 `C API`。你只需把每个容器的元素复制到一个 `vector` 中，然后传给该 `API`。
+
+```cpp
+size_t fillArray(double* pArray, size_t arraySize);
+
+vector<double> vd(100);
+vd.resize(fillArray(&vd[0], vd.size()));
+deque<double> d(vd.begin(), vd.end());
+list<double>  l(vd.begin(), vd.end());
+set<double>   s(vd.begin(), vd.end());
+```
+
+### 2.5. 第17条：使用“swap技巧”除去多余的容量
+
+为了避免矢量仍占用不再需要的内存，你希望有一种方法能把它的容量从以前的最大值缩减到当前需要的数量。这种对容量的缩减通常被称为 `shrink to fit`（压缩至适当大小）。
+
+```cpp
+vector<int> v{1, 2};
+v.clear();             // erase 和 clear 只会清除元素，不会减小容量
+vector<int>().swap(v); // swap 技巧可以压缩至适当大小
+
+string s{"hello world hello world"};
+s.clear();
+string().swap(s); // 清除 s 并把它的容量变为最小，string 不是 0
+```
+
+在做 `swap` 的时候，不仅两个容器的内容被交换，同时它们的迭代器、指针和引用也将被交换（string除外）。在 `swap` 发生后，原先指向某容器中元素的迭代器、指针和引用依然有效，并指向同样的元素——但是，这些元素已经在另一个容器中了。
+
+### 2.6. 第18条：避免使用`vector<bool>`
+
+作为一个 `STL` 容器，`vector<bool>` 只有两点不对。
+
+- 它不是一个 `STL` 容器。
+- 它并不存储 `bool`。
+
+`vector<bool>` 是一个假的容器，它并不真的储存 `bool`，在一个典型的实现中，储存在 `vector` 中的每个 `bool` 仅占一个二进制位，一个8位的字节可容纳8个 `bool`。在内部，`vector<bool>` 使用了与位域（bitfield）一样的思想，来表示它所存储的那些 `bool`；实际上它只是假装存储了这些 `bool`。
+
+标准库提供了两种选择。
+
+- 第一种是 `deque<bool>`。`deque` 中元素的内存不是连续的，所以你不能把 `deque<bool>` 中的数据传递给一个期望 `bool` 数组的 `C API`。
+- 第二种是 `bitset`。`bitset` 不是 `STL` 容器，但它是标准 `C++` 库的一部分。与 `STL` 容器不同的是，它的大小（即元素的个数）在编译时就确定了，所以它不支持插入和删除元素。
+
+
+
+## 3. 第3章 关联容器
+
+### 3.1. 第19条：理解相等（equality）和等价（equivalence）的区别
+
+`find` 对“相同”的定义是相等，是以 `operator==` 为基础的。`set::insert` 对“相同”的定义是等价，是以 `operator<` 为基础的。
+
+### 3.2. 第20条：为包含指针的关联容器指定比较类型
+
+`ssp` 会按顺序保存它的内容，但因为它包含的是指针，所以会按照指针的值进行排序，而不是按字符串的值。
+
+```cpp
+#include <algorithm>
+#include <deque>
+#include <functional>
+#include <iostream>
+#include <istream>
+#include <list>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <set>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// 自定义指针比较
+struct DereferenceLess
+{
+    template <typename PtrType>
+    bool operator()(PtrType ps1, PtrType ps2)
+    {
+        return *ps1 < *ps2;
+    }
+};
+
+int main()
+{
+	// 1. 无序输出
+    set<string*> ssp;
+    ssp.insert(new string("Anteater"));
+    ssp.insert(new string("Wombat"));
+    ssp.insert(new string("Lemur"));
+    ssp.insert(new string("Penguin"));
+    for (auto i = ssp.begin(); i != ssp.end(); ++i)
+    {
+        cout << **i << endl;
+    }
+
+    // 2. 自定义指针比较
+    struct StringPtrLess : public binary_function<const string*, const string*, bool>
+    {
+        bool operator()(const string* ps1, const string* ps2) { return *ps1 < *ps2; }
+    };
+
+    set<string*, StringPtrLess> ssp2;
+    ssp2.insert(new string("Anteater"));
+    ssp2.insert(new string("Wombat"));
+    ssp2.insert(new string("Lemur"));
+    ssp2.insert(new string("Penguin"));
+    for (auto i = ssp2.begin(); i != ssp2.end(); ++i)
+    {
+        cout << **i << endl;
+    }
+
+	// 3. 自定义指针比较 模板
+    set<string*, DereferenceLess> ssp3;
+    ssp3.insert(new string("Anteater"));
+    ssp3.insert(new string("Wombat"));
+    ssp3.insert(new string("Lemur"));
+    ssp3.insert(new string("Penguin"));
+    for (auto i = ssp3.begin(); i != ssp3.end(); ++i)
+    {
+        cout << **i << endl;
+    }
+
+    return 0;
+}
+```
+
+### 3.3. 第21条：总是让比较函数在等值情况下返回false
+
+比较函数的返回值表明的是按照该函数定义的排列顺序，一个值是否在另一个之前。相等的值从来不会有前后顺序关系，对于相等的值，比较函数应当始终返回 `false`。
+
+```cpp
+set<int, less_equal<int>> s;
+s.insert(10);
+s.insert(10);	// less_equal 导致未定义行为，程序可能错误
+```
+
+### 3.4. 第22条：切勿直接修改set或multiset中的键
+
+对于 `map` 和 `multimap` 尤其简单，因为如果有程序试图改变这些容器中的键，它将不能通过编译，对于一个 `map<K,V>` 或 `multimap<K,V>` 类型的对象，其中的元素类型是 `pair<const K,V>`。（如果利用 `const_cast`，你或许可以修改它，后面我们将会看到。不管你是否相信，有时你可能希望这样做。）
+
+```cpp
+map<int, string> m;
+m.emplace(1, "1");
+m.begin()->first = 10; // 错误，map 主键不能被修改
+
+multimap<int, string> mm;
+mm.emplace(1, "1");
+mm.begin()->first = 20; // 错误，multimap 主键不能被修改
+```
+
+
+
+
 
 
