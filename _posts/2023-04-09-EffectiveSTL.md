@@ -405,7 +405,7 @@ string().swap(s); // 清除 s 并把它的容量变为最小，string 不是 0
 
 
 
-## 3. 第3章 关联容器
+## 3. 关联容器
 
 ### 3.1. 第19条：理解相等（equality）和等价（equivalence）的区别
 
@@ -416,18 +416,10 @@ string().swap(s); // 清除 s 并把它的容量变为最小，string 不是 0
 `ssp` 会按顺序保存它的内容，但因为它包含的是指针，所以会按照指针的值进行排序，而不是按字符串的值。
 
 ```cpp
-#include <algorithm>
-#include <deque>
 #include <functional>
 #include <iostream>
-#include <istream>
-#include <list>
-#include <map>
-#include <memory>
-#include <mutex>
 #include <set>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -443,7 +435,7 @@ struct DereferenceLess
 
 int main()
 {
-	// 1. 无序输出
+    // 1. 无序输出
     set<string*> ssp;
     ssp.insert(new string("Anteater"));
     ssp.insert(new string("Wombat"));
@@ -470,7 +462,7 @@ int main()
         cout << **i << endl;
     }
 
-	// 3. 自定义指针比较 模板
+    // 3. 自定义指针比较 模板
     set<string*, DereferenceLess> ssp3;
     ssp3.insert(new string("Anteater"));
     ssp3.insert(new string("Wombat"));
@@ -508,6 +500,279 @@ multimap<int, string> mm;
 mm.emplace(1, "1");
 mm.begin()->first = 20; // 错误，multimap 主键不能被修改
 ```
+
+实际上，雇员的 `ID` 号是这个 `set` 中的元素的键（key），其他的雇员数据只不过跟这个键绑在一起而已。我们就没有理由不可以把个别雇员的头衔改为某个有特定含义的值，因为我们在这里所做的是修改雇员中与集合的排序方式无关的部分（雇员记录中不属于键的部分），所以这段代码不会破坏该集合。
+
+为了能够修改其他部分，我们必须把 `*i` 的常量性质（constness）转换掉。
+
+```cpp
+#include <functional>
+#include <iostream>
+#include <set>
+#include <string>
+
+using namespace std;
+
+class Employee
+{
+public:
+    Employee(int number) : m_number(number) {}
+
+    const string& name() const {};                                    // 获取雇员名字
+    void          setName(const string& name){};                      // 设置雇员名字
+    const string& title() const {};                                   // 获取雇员头衔
+    void          setTitle(const string& title) { m_title = title; }; // 设置雇员头衔
+    int           idNumber() const { return m_number; };              // 获取雇员ID
+
+private:
+    int    m_number;
+    string m_title;
+};
+
+struct IDNumberLess : public binary_function<Employee, Employee, bool>
+{
+    bool operator()(const Employee& lhs, const Employee& rhs) const { return lhs.idNumber() < rhs.idNumber(); }
+};
+
+int main()
+{
+    typedef set<Employee, IDNumberLess> EmplSet;
+
+    EmplSet  se; // se 是按照 ID 号进行排序
+    Employee selectID(1);
+    se.insert(selectID);
+    auto i = se.find(selectID);
+    if (i != se.end())
+    {
+        // 设置雇员新头衔
+        // VS2017 中不合法，因为 *i 为 const
+        const_cast<Employee&>(*i).setTitle("New Title 1");
+        // 未能更改，因为这样强转 const 会产生临时对象
+        static_cast<Employee>(*i).setTitle("New Title 2");
+    }
+
+    return 0;
+}
+```
+
+如果你想以一种总是可行而且安全的方式来修改 `set`、`multiset`、`map` 和 `multimap` 中的元素，则可以分5个简单步骤来进行：
+
+- 找到你想修改的容器的元素。如果你不能肯定最好的做法，第45条介绍了如何执行一次恰当的搜索来找到特定的元素。
+- 为将要被修改的元素做一份副本。在 `map` 或 `multimap` 的情况下，不要把该副本的第一个部分声明为 `const`。
+- 修改该副本，使它具有你期望它在容器中的值。
+- 把该元素从容器中删除，通常是通过调用 `erase` 来进行的（见第9条）。
+- 把新的值插入到容器中。如果按照容器的排列顺序，新元素的位置可能与被删除元素的位置相同或紧邻，则使用“提示”（hint）形式的 `insert`，以便把插入的效率从对数时间提高到常数时间。把你从第1步得来的迭代器作为提示信息。
+
+```cpp
+#include <functional>
+#include <iostream>
+#include <set>
+#include <string>
+
+using namespace std;
+
+class Employee
+{
+public:
+    Employee(int number) : m_number(number) {}
+
+    const string& name() const {};                                    // 获取雇员名字
+    void          setName(const string& name){};                      // 设置雇员名字
+    const string& title() const {};                                   // 获取雇员头衔
+    void          setTitle(const string& title) { m_title = title; }; // 设置雇员头衔
+    int           idNumber() const { return m_number; };              // 获取雇员ID
+
+private:
+    int    m_number;
+    string m_title;
+};
+
+struct IDNumberLess : public binary_function<Employee, Employee, bool>
+{
+    bool operator()(const Employee& lhs, const Employee& rhs) const { return lhs.idNumber() < rhs.idNumber(); }
+};
+
+int main()
+{
+    typedef set<Employee, IDNumberLess> EmplSet;
+
+    EmplSet  se; // se 是按照 ID 号进行排序
+    Employee selectID(1);
+    Employee selectID2(2);
+    se.insert(selectID);
+    se.insert(selectID2);
+    auto i = se.find(selectID); // 1. 找到待修改元素
+    if (i != se.end())
+    {
+        Employee e(*i);            // 2. 复制该元素
+        e.setTitle("New Title 1"); // 3. 修改副本
+        se.erase(i++);             // 4. 删除该元素，后缀递增迭代器以保持其有效性
+        se.insert(i, e);           // 5. 插入新元素和原来位置相同
+    }
+
+    return 0;
+}
+```
+
+### 3.5. 第23条：考虑用排序的vector替代关联容器
+
+很多应用程序使用其数据结构的方式并不这么混乱。它们使用其数据结构的过程可以明显地分为3个阶段，总结如下。
+
+- 设置阶段。创建一个新的数据结构，并插入大量元素。在这个阶段，几乎所有的操作都是插入和删除操作。很少或几乎没有查找操作。
+- 查找阶段。查询该数据结构以找到特定的信息。在这个阶段，几乎所有的操作都是查找操作，很少或几乎没有插入和删除操作。
+- 重组阶段。改变该数据结构的内容，或许是删除所有的当前数据，再插入新的数据。在行为上，这个阶段与第（1）阶段类似。当这个阶段结束以后，应用程序又回到第（2）段。
+
+只有对排序的容器才能够正确地使用查找算法 `binary_search` 、 `lower_bound` 和 `equal_range` 等。
+
+为什么通过（排序的）`vector` 执行的二分搜索，比通过二叉查找树执行的二分搜索具有更好的性能呢？
+
+- 大小的因素。如果选择了关联容器，则我们几乎肯定在使用平衡二叉树。这样的树是由树节点构成的，每个节点不仅包含了一个 `Widget`，而且还包含了几个指针：一个指针指向该节点的左儿子，一个指针指向该节点的右儿子，（通常）还有一个指针指向它的父节点。这意味着在一个关联容器中存储一个 `Widget` 所伴随的空间开销至少是 3 个指针。
+- 引用的局域性。假定我们的数据结构足够大，它们被分割后将跨越多个内存页面，但 `vector` 将比关联容器需要更少的页面。如果你的 `STL` 实现没有采取措施来提高这些树节点的引用局域性，那么，这些节点将会散布在你的全部地址空间中。这将会导致更多的页面错误。
+
+### 3.6. 第24条：当效率至关重要时，请在map::operator[]与map::insert之间谨慎做出选择。
+
+`map::operator[]` 的设计目的是为了提供“添加和更新”（add orupdate）的功能。首先会检查键 `k` 是否已经在 `map` 中了。如果没有，它就被加入，并以v作为相应的值。如果 `k` 已经在映射表中了，则与之关联的值被更新为 `v`。但如果 `k` 还没有在映射表中，那就没有 `operator[]` 可以指向的值对象。在这种情况下，它使用值类型的默认构造函数创建一个新的对象，然后 `operator[]` 就能返回一个指向该新对象的引用了。
+
+当效率至关重要时，你应该在 `map::operator[]` 和 `map::insert` 之间仔细做出选择。如果要更新一个已有的映射表元素，则应该优先选择 `operator[]`；但如果要添加一个新的元素，那么最好还是选择 `insert`。
+
+### 3.7. 第25条：熟悉非标准的散列容器
+
+
+
+## 4. 迭代器
+
+`STL` 标准容器实际上提供了4种不同的迭代器类型：`iterator` 、 `const_iterator` 、 `reverse_iterator` 和 `const_reverse_iterator`
+
+### 4.1. 第26条：iterator优先于const_iterator、reverse_iterator以及const_reverse_iterator
+
+![image-20230413235923185](/media/image/2023-04-09-EffectiveSTL/iterator_relation.png)
+
+
+
+我们有足够的信息来理解为什么应该尽可能使用 `iterator` ，而避免使用 `const` 或者 `reverse` 型的迭代器：
+
+- 有些版本的 `insert` 和 `erase` 函数要求使用 `iterator`。如果你需要调用这些函数，那你就必须使用 `iterator`。`const` 和 `reverse` 型的迭代器不能满足这些函数的要求。
+- 要想隐式地将一个 `const_iterator` 转换成 `iterator` 是不可能的，第27条中讨论的将 `const_iterator` 转换成 `iterator` 的技术并不普遍适用，而且效率也不能保证。
+- 从 `reverse_iterator` 转换而来的 `iterator` 在使用之前可能需要相应的调整，第28条讨论了为什么需要调整以及何时进行调整。
+
+### 4.2. 第27条：使用distance和advance将容器的const_iterator转换成iterator
+
+要想让 `distance` 调用顺利地通过编译，你需要排除这里的二义性。最简单的办法是显式地指明 `distance` 所使用的类型参数，从而避免让编译器来推断该类型参数。
+
+```cpp
+vector<int> intVec{ 1,2,3 };
+vector<int>::const_iterator ci = intVec.cend() - 1;
+vector<int>::iterator i = intVec.begin();
+advance(i, distance<vector<int>::const_iterator>(i, ci));
+```
+
+它的效率取决于你所使用的迭代器。对于随机访问的迭代器（如vector、string和deque产生的迭代器）而言，它是一个常数时间的操作；对于双向迭代器（所有其他标准容器的迭代器，以及某些散列容器实现（见第25条）的迭代器）而言，它是一个线性时间的操作。
+
+### 4.3. 第28条：正确理解由reverse_iterator的base()成员函数所产生的iterator的用法
+
+```cpp
+vector<int> intVec{ 1,2,3,4,5 };
+vector<int>::reverse_iterator ri = find(intVec.rbegin(), intVec.rend(), 3);
+vector<int>::iterator i(ri.base());
+```
+
+![image-20230417232650024](/media/image/2023-04-09-EffectiveSTL/reverse_iterator.png)
+
+在 `reverse_iterator` 与对应的由 `base()` 产生的 `iterator` 之间存在偏移，这段偏移也正好勾画出了`rbegin()` 和 `rend()` 与对应的 begin() 和 `end()` 之间的偏移。
+
+- 如果要在一个 `reverse_iterator ri` 指定的位置上插入新元素，则只需在 `ri.base()` 位置处插入元素即可。对于插入操作而言，`ri` 和 `ri.base()` 是等价的，`ri.base()` 是真正与 `ri` 对应的 `iterator`。
+- 如果要在一个 `reverse_iterator ri` 指定的位置上删除一个元素，则需要在 `ri.base()` 前面的位置上执行删除操作。对于删除操作而言，`ri` 和 `ri.base()` 是不等价的，`ri.base()` 不是与 `ri` 对应的 `iterator`。
+
+```cpp
+vector<int>                   intVec{1, 2, 3, 4, 5};
+vector<int>::reverse_iterator ri = find(intVec.rbegin(), intVec.rend(), 3);
+vector<int>::iterator         i(ri.base());
+// 因为插入实在前方插入，所以转换后就是在 3 后面插入
+intVec.insert(ri.base(), 99);
+// 这样就能正确删除 ri 指向元素 3
+intVec.erase((++ri).base());
+```
+
+### 4.4. 第29条：对于逐个字符的输入请考虑使用istreambuf_iterator
+
+因为 `istream_iterator` 使用 `operator>>` 函数来完成实际的读操作，而默认情况下 `operator>>` 函数会跳过空白字符。假定你希望保留空白字符，那么所需要做的工作是改写这种默认行为，只要清除输入流的 `skipws` 标志即可：
+
+```cpp
+ifstream inputFile("../../test/read.txt");
+string fileData((istream_iterator<char>(inputFile)), istream_iterator<char>());
+
+ifstream inputFile2("../../test/read.txt");
+// 禁止忽略空格
+inputFile2.unsetf(ios::skipws);
+string fileData2((istream_iterator<char>(inputFile2)), istream_iterator<char>());
+
+// 同样能完全读取并效率更高
+ifstream inputFile3("../../test/read.txt");
+string   fileData3((istreambuf_iterator<char>(inputFile3)), istreambuf_iterator<char>());
+```
+
+如果你需要从一个输入流中逐个读取字符，那么就不必使用格式化输入；如果你关心的是读取流的时间开销，那么使用 `istreambuf_iterator` 取代 `istream_iterator` 只是多输入了 3 个字符，却可以获得明显的性能改善。对于非格式化的逐个字符输入过程，你总是应该考虑使用 `istreambuf_iterator`。
+
+同样地，对于非格式化的逐个字符输出过程，你也应该考虑使用 `ostreambuf_iterator`。它可以避免因使用 `ostream_iterator` 而带来的额外负担（但同时也损失了格式化输出的灵活性），从而具有更为优越的性能。
+
+
+
+## 5. 算法
+
+### 5.1. 第30条：确保目标区间足够大
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
