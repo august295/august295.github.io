@@ -721,29 +721,154 @@ string   fileData3((istreambuf_iterator<char>(inputFile3)), istreambuf_iterator<
 
 ### 5.1. 第30条：确保目标区间足够大
 
+需要牢记的是：无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。要在算法执行过程中增大目标区间，请使用插入型迭代器，比如 `ostream_iterator`，或者由`back_inserter`、`front_inserter`和 `inserter` 返回的迭代器。
+
+### 5.2. 第31条：了解各种与排序有关的选择
+
+- 如果需要对 `vector`、`string`、`deque` 或者数组中的元素执行一次完全排序，那么可以使用 `sort` 或者 `stable_sort`。
+- 如果有一个 `vector`、`string`、`deque` 或者数组，并且只需要对等价性最前面的 `n` 个元素进行排序，那么可以使用 `partial_sort`。
+- 如果有一个 `vector`、`string`、`deque` 或者数组，并且需要找到第 `n` 个位置上的元素，需要找到等价性最前面的 `n` 个元素但又不必对这 `n` 个元素进行排序，`nth_element` 正是你所需要的函数。
+- 如果需要将一个标准序列容器中的元素按照是否满足某个特定的条件区分开来，`partition` 和 `stable_partition` 可能正是你所需要的。
+- 如果你的数据在一个 `list` 中，那么你仍然可以直接调用 `partition` 和 `stable_partition` 算法；你可以用 `list::sort` 来替代 `sort` 和 `stable_sort` 算法。 如果你需要获得 `partial_sort` 或 `nth_element` 算法的效果，正如前面我所提到的那样，你可以有一些间接的途径来完成这项任务。
+
+```cpp
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <iterator>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    vector<int> intVec{6, 7, 1, 2, 3, 4, 5, 8, 9};
+    // 默认将最小元素顺序排列到前 3 个
+    partial_sort(intVec.begin(), intVec.begin() + 3, intVec.end());
+
+    vector<int> intVec2{6, 7, 1, 2, 3, 4, 5, 8, 9};
+    // 默认将最大元素顺序排列到前 3 个
+    partial_sort(intVec2.begin(), intVec2.begin() + 3, intVec2.end(), [](int a, int b) { return a > b; });
+
+    vector<int> intVec3{6, 7, 1, 2, 3, 4, 5, 8, 9};
+    // 默认将最小元素排列到前 3 个，不一定考虑顺序
+    nth_element(intVec3.begin(), intVec3.begin() + 3, intVec3.end());
+
+    vector<int> intVec4{6, 7, 1, 2, 3, 4, 5, 8, 9};
+    // 所有满足条件元素移到前部，返回第一个不满住条件的迭代器
+	vector<int>::iterator goodEnd = partition(intVec4.begin(), intVec4.end(), [](int a) { return a > 7; });
+
+    return 0;
+}
+```
+
+### 5.3. 第32条：如果确实需要删除元素，则需要在remove这一类算法之后调用erase
+
+`remove` 不是真正意义上的删除，因为它做不到。（list::remove会真正删除元素）
+
+在内部，`remove` 遍历整个区间，用需要保留的元素的值覆盖掉那些要被删除的元素的值。这种覆盖是通过对那些需要被覆盖的元素的赋值来完成的。
+
+![image-20230424221210405](/media/image/2023-04-09-EffectiveSTL/remove.png)
+
+```cpp
+vector<int> intVec{1, 2, 3, 99, 5, 99, 7, 8, 9, 99};
+// 不能真正删除，是用需要保留的元素的值覆盖掉那些要被删除的元素的值。
+// 结果是：1 2 3 5 7 8 9 8 9 99
+//remove(intVec.begin(), intVec.end(), 99);
+// 只有容器函数才能删除
+// 尾部迭代器改变，通过指针依旧能获取上述数据
+intVec.erase(remove(intVec.begin(), intVec.end(), 99), intVec.end());
+int value = *(&intVec[0] + 9);
+```
+
+### 5.4. 第33条：对包含指针的容器使用remove这一类算法时要特别小心
+
+删除容器中的指针并不能删除该指针所指的对象。
+
+![image-20230425230910570](/media/image/2023-04-09-EffectiveSTL/remove_if.png)
+
+如果无法避免对这种容器使用 `remove`，那么一种可以消除该问题的做法是，在进行 `erase-remove` 习惯用法之前，先把那些指向未被验证过的 `Widget` 的指针删除并置成空，然后清除该容器中所有的空指针。
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Widget
+{
+public:
+    Widget(){};
+    Widget(double weight) : m_weight(weight){};
+    Widget& operator=(double weight) { m_weight = weight; };
+
+public:
+    double m_weight;
+};
+
+// 删除条件
+void delAndNullifyUncertified(Widget*& pWidget) {
+	if (pWidget->m_weight > 10) {
+		delete pWidget;
+		pWidget = nullptr;
+	}
+}
+
+int main()
+{
+	vector<Widget*> v;
+	// 遍历指针对象并删除置空
+	for_each(v.begin(), v.end(), delAndNullifyUncertified);
+	// 删除空指针
+	v.erase(remove(v.begin(), v.end(), nullptr), v.end());
+
+    return 0;
+}
+```
+
+### 5.5. 第34条：了解哪些算法要求使用排序的区间作为参数
+
+### 5.6. 第35条：通过mismatch或lexicographical_compare实现简单的忽略大小写的字符串比较
+
+### 5.7. 第36条：理解copy_if算法的正确实现
+
+`C++11` 已实现 `copy_if`
+
+```cpp
+vector<int> v1{1, 2, 3, 4, 5, 6};
+vector<int> v2;
+// 拷贝大于 3 的值
+auto iter = copy_if(v1.begin(), v1.end(), back_inserter(v2), [](int i) { return i > 3; });
+```
+
+### 5.8. 第37条：使用accumulate或者for_each进行区间统计
+
+```cpp
+vector<int> v1{1, 2, 3, 4, 5, 6};
+// 求和
+auto num           = accumulate(v1.begin(), v1.end(), 0);
+// 自定义求和函数
+auto str           = accumulate(next(v1.begin()),
+                                v1.end(),
+                                to_string(v1[0]),
+                                [](string a, int b) -> string { return std::move(a) + '-' + std::to_string(b); });
+// 区间统计，大于2小于5
+int num_accumulate = accumulate(v1.begin(), v1.end(), 0, [](int a, int b) { return (b > 2 && b < 5) ? ++a : a; });
+
+// 求和
+int sum = 0;
+for_each(v1.begin(), v1.end(), [&sum](int a) { sum += a; });
+// 区间统计，大于1小于5
+int num_for_each = 0;
+for_each(v1.begin(), v1.end(), [&num_for_each](int a) { (a > 1 && a < 5) ? num_for_each++ : num_for_each; });
+```
 
 
 
+## 6. 第6章 函数子、函数子类、函数及其他
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### 6.1. 第38条：遵循按值传递的原则来设计函数子类
 
 
 
