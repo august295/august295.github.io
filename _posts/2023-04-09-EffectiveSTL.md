@@ -870,37 +870,75 @@ for_each(v1.begin(), v1.end(), [&num_for_each](int a) { (a > 1 && a < 5) ? num_f
 
 ### 6.1. 第38条：遵循按值传递的原则来设计函数子类
 
+#### 6.1.1. 第39条：确保判别式是“纯函数”
+
+- 一个判别式（predicate）是一个返回值为 `bool` 类型（或者可以隐式地转换为bool类型）的函数。
+- 一个纯函数（pure function）是指返回值仅仅依赖于其参数的函数。
+- 判别式类（predicate class）是一个函数子类，它的 `operator()` 函数是一个判别式，也就说是，它的 `operator()` 返回 `true` 或者 `false`。
+
+### 6.2. 第40条：若一个类是函数子，则应使它可配接
+
+### 6.3. 第41条：理解ptr_fun、mem_fun和mem_fun_ref的来由
+
+如果有一个函数f和一个对象x，现在希望在x上调用f，而我们在x的成员函数之外，那么为了执行这个调用，C++提供了3种不同的语法
+
+```cpp
+f();		// 语法一：f 是一个非成员函数
+x.f();		// 语法二：f 是成员函数，并且 x 是一个对象或对象的引用
+p->f();		// 语法三：f 是成员函数，并且 p 是一个指向对象 x 的指针
+```
+
+### 6.4. 第42条：确保 `less<T>` 与 `operator<` 具有相同的语义
 
 
 
+## 7. 第7章 在程序中使用STL
 
+### 7.1. 第43条：算法调用优先于手写的循环
 
+- 效率。算法通常比程序员自己写的循环效率更高。
+- 正确性。自己写循环比使用算法更容易出错。
+- 可维护性。使用算法的代码通常比手写循环的代码更加简洁明了。
 
+### 7.2. 第44条：容器的成员函数优先于同名的算法
 
+- 成员函数往往速度快；
+- 成员函数通常与容器（特别是关联容器）结合得更加紧密，这是算法所不能比的。
 
+### 7.3. 第45条：正确区分count、find、binary_search、lower_bound、upper_bound和equal_range
 
+| 前提                                   | 使用算法   |                       | 使用成员函数 |                   |
+| -------------------------------------- | ---------- | --------------------- | ------------ | ----------------- |
+|                                        | 未排序区间 | 排序区间              | set map      | multiset multimap |
+| 特定值存在吗？                         | find       | binary_search         | count        | find              |
+| 特定值存在吗？存在时第一个值对象在哪里 | find       | equal_range           | find         | find, lower_bound |
+| 第一个不超过特定值对象在哪里           | find_if    | lower_bound           | lower_bound  | lower_bound       |
+| 第一个特定值之后的对象在哪里           | find_if    | upper_bound           | upper_bound  | upper_bound       |
+| 具有多少个特定值对象                   | count      | equal_range(distance) | count        | count             |
+| 具有特定之的对象在哪里                 | find       | equal_range           | equal_range  | equal_range       |
 
+### 7.4. 第46条：考虑使用函数对象而不是函数作为STL算法的参数
 
+### 7.5. 第47条：避免产生“直写型”（write-only）的代码
 
+### 7.6. 第48条：总是包含（#include）正确的头文件
 
+- 几乎所有的标准 `STL` 容器都被声明在与之同名的头文件中，比如 `vector` 被声明在 `<vector>` 中，`list` 被声明在 `<list>` 中。但是 `<set>` 中声明了 `set` 和 `multiset`，`<map>` 中声明了 `map` 和 `multimap`。
+- 除了4个STL算法以外，其他所有的算法都被声明在 `<algorithm>` 中，这4个算法是 `accumulate`、`inner_product`、`adjacent_difference`和`partial_sum`，它们被声明在头文件 `<numeric>` 中。
+- 特殊类型的迭代器，包括 `istream_iterator` 和 `istreambuf_iterator`（见第29条），被声明在 `<iterator>` 中。
+- 标准的函数子（比如 `less<T>`）和函数子配接器（比如not1、bind2nd）被声明在头文件 `<functional>` 中。
 
+### 7.7. 第49条：学会分析与STL相关的编译器诊断信息
 
+| 类型        | 原型                                                   |
+| ----------- | ------------------------------------------------------ |
+| std::string | basic_string<char, char_traits<char>, allocator<char>> |
 
+### 7.8. 第50条：熟悉与STL相关的Web站点
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- SGI STL 站点：http://www.sgi.com/tech/stl
+- STLport 站点：http://www.stlport.org
+- Boost 站点：http://www.boost.org
 
 
 
