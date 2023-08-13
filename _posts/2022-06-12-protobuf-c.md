@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "protobuf"
+title: "protobuf-c"
 categories: C/C++
 tags: ThirdPart protobuf
 author: August
@@ -10,7 +10,7 @@ typora-root-url: ..
 
 * content
 {:toc}
-`protobuf` 是 `Google` 开发了供内部使用的一种免费的开源跨平台数据格式，用于序列化结构化数据，并在开源许可下为多种语言提供了代码生成器。
+本文主要介绍 `protobuf` 对 `C` 结构体序列化的相互转换。
 
 
 
