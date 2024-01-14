@@ -186,6 +186,13 @@ pw1 = pw2;                        // pw1 指向 Widget: pw2 被置为 NULL
 ### 1.9. 第9条：慎重选择删除元素的方法
 
 - 要删除容器中有特定值的所有对象：如果容器是 `vector`、`string` 或 `deque`，则使用 `erase-remove` 习惯用法。
+
+```cpp
+vector<int> vec;
+// erase-remove 模式
+vec.erase(remove(vec.begin(), vec.end(), 1963), vec.end);
+```
+
 - 如果容器是 `list`，则使用 `list::remove`。
 - 如果容器是一个标准关联容器，则使用它的 `erase` 成员函数。
 - 要删除容器中满足特定判别式（条件）的所有对象：
@@ -197,30 +204,39 @@ pw1 = pw2;                        // pw1 指向 Widget: pw2 被置为 NULL
   - 如果容器是一个标准关联容器，则写一个循环来遍历容器中的元素，记住当把迭代器传给 `erase` 时，要对迭代器做后缀递增
 
 ```cpp
-vector<int> vec;
-// erase-remove 模式
-vec.erase(remove(vec.begin(), vec.end(), 1963), vec.end);
-
+vector<int> vec{1, 2, 3, 4, 5, 6};
 // 序列容器遍历删除
 for (auto iter = vec.begin(); iter != vec.end(); /*什么也不做*/)
 {
     if (*iter % 2 == 0)
     {
-        vec.erase(iter++); // 后缀++使迭代器已近移动，删除返回副本
+        iter = vec.erase(iter); // 迭代器失效，记录序列容器删除会返回随被删除元素的下一个元素的有效迭代器
     }
     else
     {
         ++iter;
     }
 }
+// 错误版本
+//for (auto iter = vec.begin(); iter != vec.end(); /*什么也不做*/)
+//{
+//    if (*iter % 2 == 0)
+//    {
+//        vec.erase(iter++); // 迭代器失效
+//    }
+//    else
+//    {
+//        ++iter;
+//    }
+//}
 
-map<int, int> m;
+map<int, int> m{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
 // 关联容器遍历删除
 for (auto iter = m.begin(); iter != m.end(); /*什么也不做*/)
 {
     if ((*iter).first % 2 == 0)
     {
-        iter = m.erase(iter); // 关联容器删除会返回随被删除元素的下一个元素的有效迭代器
+        m.erase(iter++); // 后缀++使迭代器已近移动，删除返回副本
     }
     else
     {
