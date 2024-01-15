@@ -230,7 +230,7 @@ for (auto iter = vec.begin(); iter != vec.end(); /*什么也不做*/)
 //    }
 //}
 
-map<int, int> m{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
+map<int, int> m{ {1, 1}, {2, 2}, {3, 3}, {4, 4} };
 // 关联容器遍历删除
 for (auto iter = m.begin(); iter != m.end(); /*什么也不做*/)
 {
