@@ -2,7 +2,7 @@
 layout: post
 title: "Jekyll本地Docker部署"
 categories: Docker
-tags: Docker Jekyll
+tags: Docker
 author: August
 mathjax: true
 typora-root-url: ..

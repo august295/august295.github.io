@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "EffectiveC++"
+title: "EffectiveC++笔记"
 categories: Book
-tags: Book C/C++
+tags: Book
 author: August
 mathjax: true
 typora-root-url: ..

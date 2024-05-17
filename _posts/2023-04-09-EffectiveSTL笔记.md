@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "EffectiveSTL"
+title: "EffectiveSTL笔记"
 categories: Book
-tags: Book C/C++
+tags: Book
 author: August
 mathjax: true
 typora-root-url: ..

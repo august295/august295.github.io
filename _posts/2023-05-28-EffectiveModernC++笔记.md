@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "EffectiveModernC++"
+title: "EffectiveModernC++笔记"
 categories: Book
 tags: Book C/C++
 author: August

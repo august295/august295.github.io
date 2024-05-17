@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "C++PrimerPlus6"
+title: "C++PrimerPlus6笔记"
 categories: Book
-tags: Book C/C++
+tags: Book
 author: August
 mathjax: true
 typora-root-url: ..

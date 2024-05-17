@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "qt-序列化"
+title: "qt-serialization"
 categories: C/C++
-tags: qt serialization
+tags: qt
 author: August
 mathjax: true
 typora-root-url: ..

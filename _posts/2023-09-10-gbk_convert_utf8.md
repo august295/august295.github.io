@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "gbk_convert_utf8"
-categories: C++
-tags: C++ gbk utf8
+categories: C/C++
+tags: C/C++
 author: August
 mathjax: true
 typora-root-url: ..

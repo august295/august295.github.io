@@ -2,7 +2,7 @@
 layout: post
 title: "boost-json"
 categories: C/C++
-tags: ThirdPart boost json
+tags: boost
 author: August
 mathjax: true
 typora-root-url: ..

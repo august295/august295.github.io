@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "boost-序列化"
+title: "boost-serialization"
 categories: C/C++
-tags: boost serialization
+tags: boost
 author: August
 mathjax: true
 typora-root-url: ..

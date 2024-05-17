@@ -2,7 +2,7 @@
 layout: post
 title: "protobuf-c"
 categories: C/C++
-tags: ThirdPart protobuf
+tags: ThirdPart
 author: August
 mathjax: true
 typora-root-url: ..
