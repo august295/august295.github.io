@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" modified="2024-07-10T10:16:47.899Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0" etag="yZnaw1LFL01KX9czyIcj" version="24.6.4" type="device">
+  <diagram name="第 1 页" id="rJskV3I2e6XMmKrl1cYy">
+    <mxGraphModel dx="1678" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="5E_33ks-HJFamxhAxUlq-3" value="x509证书基本格式" style="swimlane;startSize=20;horizontal=1;containerType=tree;" vertex="1" parent="1">
+          <mxGeometry x="10" y="110" width="660" height="750" as="geometry">
+            <mxRectangle x="40" y="40" width="90" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-8" value="certificate&lt;div&gt;X509&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="20" y="455" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-13" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" source="5E_33ks-HJFamxhAxUlq-8" target="5E_33ks-HJFamxhAxUlq-14" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-14" value="tbsCertificate&lt;div&gt;证书&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="220" y="270.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-15" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" source="5E_33ks-HJFamxhAxUlq-8" target="5E_33ks-HJFamxhAxUlq-16" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-16" value="algorithmIdentifier&lt;div&gt;签名算法&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="220" y="588.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-17" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" source="5E_33ks-HJFamxhAxUlq-8" target="5E_33ks-HJFamxhAxUlq-18" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-18" value="signature&lt;br&gt;&lt;div&gt;签名&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="220" y="670.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-23" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-24" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-24" value="version[0]&lt;div&gt;版本&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="40.000000000000114" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-25" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-26" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-26" value="serialNumber&lt;div&gt;序列号&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="90.00000000000011" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-27" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-28" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-28" value="signature&lt;div&gt;签名算法&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="140.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-29" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-30" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-30" value="issuer&lt;br&gt;&lt;div&gt;颁发者&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="190.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-31" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-32" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-32" value="&lt;div&gt;validity&lt;/div&gt;有效期" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="240.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-33" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-34" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-34" value="subject&lt;br&gt;&lt;div&gt;主体&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="290.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-35" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-36" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-36" value="subjectPublicKeyInfo&lt;br&gt;&lt;div&gt;主体公钥信息&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="340" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-37" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-38" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-38" value="issuerUniqueID&lt;br&gt;&lt;div&gt;颁发者唯一ID&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="390.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-39" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-40" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-40" value="subjectUniqueID[2]&lt;br&gt;&lt;div&gt;主体唯一ID&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="440.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-41" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-42" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="371" y="289.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-42" value="extensions[3]&lt;br&gt;&lt;div&gt;扩展&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="490.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-51" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-52" source="5E_33ks-HJFamxhAxUlq-16" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="585" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-52" value="algorithm&lt;div&gt;算法&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="560.0000000000001" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-53" value="" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;segment=10;curved=1;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;" edge="1" target="5E_33ks-HJFamxhAxUlq-54" source="5E_33ks-HJFamxhAxUlq-16" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="585" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5E_33ks-HJFamxhAxUlq-54" value="parameters&lt;div&gt;参数&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;entityRelationEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;,&quot;segment&quot;:10,&quot;curved&quot;:1,&quot;sourcePerimeterSpacing&quot;:0,&quot;targetPerimeterSpacing&quot;:0};" vertex="1" parent="5E_33ks-HJFamxhAxUlq-3">
+          <mxGeometry x="430" y="620" width="150" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
