@@ -10,6 +10,26 @@
         {{ content }}
 
     {% include footer.html %}
+    
+    {%- if site.mermaid_enable -%}
+    <script type="text/javascript" src="https://cdn.staticfile.org/mermaid/8.12.0/mermaid.min.js"></script>
+    <script type="text/javascript">
+      (function(){
+        // Initial mermaid
+        mermaid.init({startOnLoad:true}, "pre code.language-mermaid", function(){
+          // Change <pre> and <code> block style
+          var codeBlock = document.querySelector('code.language-mermaid');
+          var preBlock = codeBlock.parentNode;
+    
+          codeBlock.style.backgroundColor = 'initial';
+          preBlock.style.border = 'none';
+          preBlock.style.textAlign = 'center';
+          preBlock.style.backgroundColor = 'initial';
+        });
+      })()
+    </script>
+    {%- endif -%}
+
     {% include backToTop.html %}
     <script src="{{ " /js/main.js " | prepend: site.baseurl }}" charset="utf-8"></script>
     <script src="{{ " /js/smooth-scroll.min.js " | prepend: site.baseurl }}" charset="utf-8"></script>
