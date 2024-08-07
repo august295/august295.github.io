@@ -16,11 +16,11 @@ type: page
 
 #### 1.1.1. Visual Studio
 
-| 分类 | 名称                     | 介绍                                             | 备注                                             |
-| ---- | ------------------------ | ------------------------------------------------ | ------------------------------------------------ |
-| 软件 | Visual Studio            | Windows 下进行最建议使用的 C++ 编程软件          | <https://visualstudio.microsoft.com/zh-hans/vs/> |
-| 插件 | Visual Assist[^1.1.1.1]  | 能够实现高亮显示、智能代码提示、显示编码错误     | <https://www.wholetomato.com/>                   |
-| 插件 | AtomineerUtils[^1.1.1.2] | 国外的一款用于生成源代码注释的工具，支持多种风格 | <https://www.atomineerutils.com/>                |
+| 分类 | 名称           | 介绍                                    | 备注                                             |
+| ---- | -------------- | --------------------------------------- | ------------------------------------------------ |
+| 软件 | Visual Studio  | Windows 下进行最建议使用的 C++ 编程软件 | <https://visualstudio.microsoft.com/zh-hans/vs/> |
+| 插件 | Visual Assist  | 能够实现高亮显示、智能代码提示          | <https://www.wholetomato.com/>                   |
+| 插件 | AtomineerUtils | 用于生成代码注释的工具，支持多种风格    | <https://www.atomineerutils.com/>                |
 
 #### 1.1.2. Visual Studio Code
 
@@ -60,9 +60,9 @@ type: page
 
 #### 1.2.4. Markdown
 
-| 名称           | 介绍                    | 官网                 |
-| -------------- | ----------------------- | -------------------- |
-| Typora[^1.2.4] | Markdown 编辑器和阅读器 | https://typoraio.cn/ |
+| 名称   | 介绍                    | 官网                   |
+| ------ | ----------------------- | ---------------------- |
+| Typora | Markdown 编辑器和阅读器 | <https://typoraio.cn/> |
 
 
 
@@ -101,11 +101,3 @@ type: page
 | C++参考手册 | C++官方参考手册，英文版 | <https://en.cppreference.com/w/cpp> |
 
 
-
-## 4. 分享
-
-[^1.1.1.1]: https://pan.baidu.com/s/1hNlw_ZssO42m-QPYE8jYxg?pwd=lzjo
-
-[^1.1.1.2]: https://pan.baidu.com/s/1oAyPsgHo41GduR44-ruRng?pwd=77cc
-
-[^1.2.4]: https://pan.baidu.com/s/1rU-V-76VsMfjyjRePPrNvw?pwd=put9

@@ -4,3 +4,4 @@ gem "jekyll"
 gem "webrick"
 gem "jekyll-paginate"
 gem "jekyll-sitemap"
+gem 'jemoji'
