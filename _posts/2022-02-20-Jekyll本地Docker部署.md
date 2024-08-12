@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Jekyll本地Docker部署"
-categories: Docker
-tags: Docker
+categories: Blog
+tags: Blog
 author: August
 typora-root-url: ..
 ---
@@ -17,6 +17,8 @@ typora-root-url: ..
 # Jekyll 本地 Docker 部署
 
 由于我的 `Github Pages` 依赖于 `jekyll`，每次有较复杂的排版时总是会出现莫名其妙的问题，所以需要配置一个本地的预览环境。但是不想主机上安装过多的定制化功能，技术路线选择了 `Docker` 容器。
+
+<font color=red>Docker 中 Jekyll 是2022年发布的，现在很多模板已不适用，本网址已弃用</font>
 
 
 
