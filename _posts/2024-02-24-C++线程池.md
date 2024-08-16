@@ -5,7 +5,7 @@ categories: C/C++
 tags: C/C++
 author: August
 typora-root-url: ..
-...
+---
 
 * content
 {:toc}
