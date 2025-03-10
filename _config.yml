@@ -70,6 +70,8 @@ analytics:
     domain: # fill in your Matomo domain
   cloudflare:
     id: # fill in your Cloudflare Web Analytics token
+  fathom:
+    id: # fill in your Fathom Site ID
 
 # Page views settings
 pageviews:
@@ -93,7 +95,7 @@ theme_mode: # [light | dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-cdn: ""
+cdn:
 
 # the avatar on sidebar, support local or CORS resources
 avatar: "/august.jpeg"
@@ -168,9 +170,6 @@ collections:
   tabs:
     output: true
     sort_by: order
-  app:
-    output: true
-    permalink: /:name
 
 defaults:
   - scope:
@@ -213,8 +212,9 @@ exclude:
   - tools
   - README.md
   - LICENSE
-  - "*.config.js"
-  - package*.json
+  - purgecss.js
+  - rollup.config.js
+  - "package*.json"
 
 jekyll-archives:
   enabled: [categories, tags]
