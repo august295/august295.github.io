@@ -96,7 +96,7 @@ theme_mode: # [light | dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-cdn: ""
+cdn:
 
 # the avatar on sidebar, support local or CORS resources
 avatar: "/august.jpeg"
@@ -171,9 +171,6 @@ collections:
   tabs:
     output: true
     sort_by: order
-  app:
-    output: true
-    permalink: /:name
 
 defaults:
   - scope:
