@@ -34,7 +34,7 @@ typora-root-url: ..
 
 ## 2. vcpkg
 
-vcpkg介绍请看：[vcpkg指南](2022-03-27-vcpkg指南.md)
+vcpkg介绍请看：[2022-03-27-vcpkg指南]({% post_url 2022-03-27-vcpkg指南 %})
 
 ## 3. cmake + vcpkg[^1]
 
