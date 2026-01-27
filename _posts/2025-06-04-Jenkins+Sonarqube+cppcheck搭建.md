@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Jenkins+Sonarqube+cppcheck 搭建"
-categories: [Tool]
-tags: [Sonarqube]
+categories: [Tool, Jenkins]
+tags: [Jenkins]
 author: August
 typora-root-url: ..
 ---

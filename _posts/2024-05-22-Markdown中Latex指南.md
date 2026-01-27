@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Markdown中Latex指南"
-categories: Tool
-tags: Tool
+categories: [Tool, Markdown]
+tags: [Markdown]
 author: August
 math: true
 typora-root-url: ..
